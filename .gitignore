@@ -84,4 +84,5 @@ gradle-app.setting
 ############################## Others
 build/
 # graphml files
-*.graphml 
+*.graphml
+SimpleSocketServer/.vscode
