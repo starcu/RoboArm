@@ -84,4 +84,4 @@ gradle-app.setting
 ############################## Others
 build/
 # graphml files
-*.scheme 
+*.graphml 
