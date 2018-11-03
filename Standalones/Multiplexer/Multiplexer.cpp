@@ -13,6 +13,10 @@
 
 #include "Multiplexer.h"
 
+std::ostream& operator<< (std::ostream &out, const State &s) {
+    return out << std::string(s);
+}
+
 Multiplexer* Multiplexer::setCtrlPins(uint8_t _gpio0, uint8_t _gpio1, uint8_t _gpio2)
 {
     #ifdef DEBUG
@@ -34,7 +38,6 @@ Multiplexer* Multiplexer::setCtrlPins(uint8_t _gpio0, uint8_t _gpio1, uint8_t _g
     bcm2835_gpio_fsel(gpio0, BCM2835_GPIO_FSEL_OUTP);
     bcm2835_gpio_fsel(gpio1, BCM2835_GPIO_FSEL_OUTP);
     bcm2835_gpio_fsel(gpio2, BCM2835_GPIO_FSEL_OUTP);
-    bcm2835_delay(100);
     
     return this;
 }
@@ -65,7 +68,7 @@ void Multiplexer::prevState()
             
     static auto riter = states.rbegin();
     
-    for(riter; riter != states.rend(); ++riter)
+    for(; riter != states.rend(); ++riter)
     {
         if(*riter == currentState) // find the start point (currentState)
             break;
@@ -87,7 +90,7 @@ void Multiplexer::nextState()
 
     static auto iter = states.begin();
      
-    for(iter; iter != states.end(); ++iter)
+    for(; iter != states.end(); ++iter)
     {
         if(*iter == currentState) // find the start point (currentState)
             break;

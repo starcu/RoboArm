@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++0x -Wall -g -O3   CMakeFiles/mux.dir/main.cpp.o  -o ../Release/bin/mux -rdynamic -lbcm2835 -lwiringPi -lm -lpthread ../Release/lib/libmultiplexer.a -lbcm2835 -lwiringPi -lm -lpthread 

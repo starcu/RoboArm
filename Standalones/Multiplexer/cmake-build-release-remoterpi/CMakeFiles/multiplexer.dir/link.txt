@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../Release/lib/libmultiplexer.a  CMakeFiles/multiplexer.dir/Multiplexer.cpp.o
+/usr/bin/ranlib ../Release/lib/libmultiplexer.a

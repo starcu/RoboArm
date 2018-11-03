@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++0x -Wall -g -O3   CMakeFiles/test_mux.dir/mux_tests.cpp.o  -o ../Release/bin/test_mux -rdynamic -lboost_system -lboost_unit_test_framework ../Release/lib/libmultiplexer.a -lbcm2835 -lwiringPi -lm -lpthread 

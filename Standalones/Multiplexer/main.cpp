@@ -29,23 +29,23 @@ int main(int argc, char** argv)
     ->addStateToQueue(LOW, LOW, HIGH)
     ->begin();
     
-    int cnt = 5;
+    int cnt = 10;
     while(cnt--)
     {
         delay(100);
         testMux.nextState();
     }
     
-   // std::cout << std::endl;
-   // std::cout << std::endl;
-   // std::cout << std::endl;
-    
-    //cnt = 10;
-   // while(cnt--)
-    //{
-    //    delay(100);
-    //    testMux.prevState();
-   // }
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    cnt = 10;
+    while(cnt--)
+    {
+        delay(100);
+        testMux.prevState();
+    }
             
     return 0;
 }

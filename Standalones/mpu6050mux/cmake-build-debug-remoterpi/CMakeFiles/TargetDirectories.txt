@@ -1,0 +1,3 @@
+/home/pi/RoboArm/Standalones/mpu6050mux/cmake-build-debug-remoterpi/CMakeFiles/rebuild_cache.dir
+/home/pi/RoboArm/Standalones/mpu6050mux/cmake-build-debug-remoterpi/CMakeFiles/edit_cache.dir
+/home/pi/RoboArm/Standalones/mpu6050mux/cmake-build-debug-remoterpi/CMakeFiles/mpu.dir

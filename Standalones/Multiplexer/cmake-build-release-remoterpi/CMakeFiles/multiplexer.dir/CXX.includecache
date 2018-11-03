@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/RoboArm/Standalones/Multiplexer/Multiplexer.cpp
+Multiplexer.h
+/home/pi/RoboArm/Standalones/Multiplexer/Multiplexer.h
+
+/home/pi/RoboArm/Standalones/Multiplexer/Multiplexer.h
+bcm2835.h
+-
+vector
+-
+iostream
+-
+string
+-
+

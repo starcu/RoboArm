@@ -9,22 +9,16 @@ include_directories(
 		${PROJECT_SOURCE_DIR}/
 		)
 
-#set(target_src 
-#    main.cpp
-#    I2Cdev.cpp
-#    MPU6050.cpp)
-
-#set(target_headers
-#    /home/pi/RoboArm/Standalones/Multiplexer/Multiplexer.h
-#    I2Cdev.h
-#    MPU6050.h
-#    MPU6050_6Axis_MotionApps20.h
-#    MPU6050_9Axis_MotionApps41.h
-#    helper_3dmath.h)
+file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin) # dir for executables
+#file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib) # dir for libraries
 
 add_executable(mpu main.cpp I2Cdev.cpp MPU6050.cpp)
+
 include_directories(${PROJECT_SOURCE_DIR} /home/pi/RoboArm/Standalones/Multiplexer/)
-find_library(MUX_LIB multiplexer HINTS /home/pi/RoboArm/Standalones/Multiplexer/build/lib/)
+find_library(MUX_LIB multiplexer HINTS /home/pi/RoboArm/Standalones/Multiplexer/${CMAKE_BUILD_TYPE}/lib/)
 target_link_libraries(mpu PUBLIC ${MUX_LIB} bcm2835 wiringPi pthread m)
 
-set(CMAKE_BUILD_DIRECTORY ../build)
+#set(CMAKE_BUILD_DIRECTORY ../build)
+
+set(EXECUTABLE_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/bin)
+#set(LIBRARY_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/lib)

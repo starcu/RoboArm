@@ -43,27 +43,26 @@ struct State
     uint8_t s1;
     uint8_t s2;
     
-    bool operator==(const State& in) const
-    {
+    bool operator==(const State& in) const{
         if(this->s0 == in.s0 && this->s1 == in.s1 && this->s2 == in.s2)
             return true;
         return false;
     }
     
-    bool operator!=(const State& in) const
-    {
-        if(this->s0 == in.s0 && this->s1 == in.s1 && this->s2 == in.s2)
+    bool operator!=(const State& in) const {
+        if (this->s0 == in.s0 && this->s1 == in.s1 && this->s2 == in.s2)
             return false;
         return true;
     }
     
-    explicit operator std::string() const
-    {
+    explicit operator std::string() const{
         return std::string( "{ "
                + std::to_string(s0) + " " 
                + std::to_string(s1) + " " 
                + std::to_string(s2) + " }");
     }
+
+    friend std::ostream& operator<< (std::ostream &out, const State &s);
 };
 
 class Multiplexer {
@@ -94,6 +93,11 @@ public:
     
     void setCurrentState(State& s);
     void setCurrentState(uint8_t _gpio0, uint8_t _gpio1, uint8_t _gpio2);
+
+    const State getCurrentState() const
+    {
+        return currentState;
+    }
     
 private:
     uint8_t gpio0, gpio1, gpio2; // common in/out choice pins
