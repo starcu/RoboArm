@@ -1,5 +1,0 @@
-/home/pi/RoboArm/Standalones/Multiplexer/cmake-build-release-remoterpi/CMakeFiles/rebuild_cache.dir
-/home/pi/RoboArm/Standalones/Multiplexer/cmake-build-release-remoterpi/CMakeFiles/mux.dir
-/home/pi/RoboArm/Standalones/Multiplexer/cmake-build-release-remoterpi/CMakeFiles/test_mux.dir
-/home/pi/RoboArm/Standalones/Multiplexer/cmake-build-release-remoterpi/CMakeFiles/edit_cache.dir
-/home/pi/RoboArm/Standalones/Multiplexer/cmake-build-release-remoterpi/CMakeFiles/multiplexer.dir

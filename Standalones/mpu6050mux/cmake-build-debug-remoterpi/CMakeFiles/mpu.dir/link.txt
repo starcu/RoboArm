@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++0x -DDEBUG=1 -Wall -O3 -g   CMakeFiles/mpu.dir/main.cpp.o CMakeFiles/mpu.dir/I2Cdev.cpp.o CMakeFiles/mpu.dir/MPU6050.cpp.o  -o ../Debug/bin/mpu -rdynamic /home/pi/RoboArm/Standalones/Multiplexer/Debug/lib/libmultiplexer.a -lbcm2835 -lwiringPi -lpthread -lm 

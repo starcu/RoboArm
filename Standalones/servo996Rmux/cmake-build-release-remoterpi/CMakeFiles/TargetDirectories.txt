@@ -1,3 +1,0 @@
-/home/pi/RoboArm/Standalones/servo996Rmux/cmake-build-release-remoterpi/CMakeFiles/rebuild_cache.dir
-/home/pi/RoboArm/Standalones/servo996Rmux/cmake-build-release-remoterpi/CMakeFiles/edit_cache.dir
-/home/pi/RoboArm/Standalones/servo996Rmux/cmake-build-release-remoterpi/CMakeFiles/servo.dir

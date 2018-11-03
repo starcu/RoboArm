@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++0x -Wall -O3 -g   CMakeFiles/servo.dir/main.cpp.o  -o ../Release/bin/servo -rdynamic /home/pi/RoboArm/Standalones/Multiplexer/Release/lib/libmultiplexer.a -lbcm2835 -lwiringPi -lpthread -lm 
