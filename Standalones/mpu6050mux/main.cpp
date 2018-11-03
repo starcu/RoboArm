@@ -64,16 +64,16 @@ int main(int argc, char **argv)
     
     uint64_t muxCounter = 0;
     std::string info;
-    //accelgyro.initialize();
     
     while (true) 
     {
+        accelgyro.initialize();
         accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
         info = "MPU6050 no." +std::to_string(muxCounter%3)+ " is working";
         std::cout << "--- [" << info << "] ---" << std::endl;
         std::cout << "x: " << ax << ", y: " << ay << ", z: " << az << std::endl;
-        mux.nextState();
-        muxCounter++;
+        //mux.nextState();
+        //muxCounter++;
         delay(50);
     }
     

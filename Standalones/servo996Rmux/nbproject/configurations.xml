@@ -36,13 +36,21 @@
       </toolsSet>
       <compileType>
         <ccTool>
+          <incDir>
+            <pElem>../Multiplexer</pElem>
+          </incDir>
           <commandLine>-std=c++0x</commandLine>
         </ccTool>
         <linkerTool>
+          <linkerAddLib>
+            <pElem>../Multiplexer/dist/Debug/GNU-Linux</pElem>
+          </linkerAddLib>
           <linkerLibItems>
             <linkerOptionItem>-lwiringPi</linkerOptionItem>
             <linkerOptionItem>-lm</linkerOptionItem>
             <linkerOptionItem>-lbcm2835</linkerOptionItem>
+            <linkerOptionItem>-lmultiplexer</linkerOptionItem>
+            <linkerOptionItem>-lpthread</linkerOptionItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

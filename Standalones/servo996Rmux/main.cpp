@@ -1,12 +1,23 @@
 #include <wiringPi.h>
 #include <stdio.h>
 #include <string>
-#include <bcm2835.h>
 #include <iostream>
-
+#include <thread>
+#include <functional>
+#include <chrono>
+#include <mutex>
+#include <condition_variable>
+#include "Multiplexer.h"
 
 #define RANGE_MIN 544
 #define RANGE_MAX 2400
+
+std::condition_variable cv;
+std::mutex mtx;
+int timeout = 1;
+bool done = false;
+void worker(int pWidth, Multiplexer& mux, bool timeoutSet, int& timeout);
+void scheduler();
 
 int main (int argc, char** argv)
 {
@@ -18,7 +29,6 @@ int main (int argc, char** argv)
     pwmSetClock (19.2);
 
     int pWidth = 0; // minimum 0.5444ms
-    int timeout = 1;
     bool timeoutSet = false;
 
     try
@@ -50,84 +60,63 @@ int main (int argc, char** argv)
     }
 
     // MUX
-    bcm2835_init();
-    bcm2835_gpio_fsel(5, BCM2835_GPIO_FSEL_OUTP);
-    bcm2835_gpio_fsel(6, BCM2835_GPIO_FSEL_OUTP);
-    bcm2835_gpio_fsel(13, BCM2835_GPIO_FSEL_OUTP);
-    bcm2835_delay(100);
+    Multiplexer mux;
     
-    int outNum = -1;
-    try
-    {
-       outNum = std::stoi(argv[3]);
-       printf("MUX out set to %d\n", outNum);
-    
-        if(outNum < 0)
-            printf("MUX out not set.\n");
-
-        if(outNum > 5)
-            printf("MUX output number out of range (0,5).\n");
-    
-    } 
-    catch(...)
-    {
-        printf("MUX out not set.\n");
-        outNum = -1;
-       //timeout = 1;
-    }
-       
-    if(outNum == 0)
-    {
-        std::cout << "OUT no.0" << std::endl;
-        bcm2835_gpio_write(5, LOW); // SN74HC4851 A(S0) RPI3 5
-        bcm2835_gpio_write(6, LOW); // SN74HC4851 B(S1) RPI3 6 
-        bcm2835_gpio_write(13, LOW); // SN74HC4851 C(S2) RPI3 13
-    }
-    else if(outNum == 1)
-    { 
-        std::cout << "OUT no.1" << std::endl;
-        bcm2835_gpio_write(5, HIGH);
-        bcm2835_gpio_write(6, LOW); 
-        bcm2835_gpio_write(13, LOW);	
-    }
-    else if(outNum == 2) 
-    {
-        std::cout << "OUT no.2" << std::endl;
-        bcm2835_gpio_write(5, LOW);
-        bcm2835_gpio_write(6, HIGH);
-        bcm2835_gpio_write(13, LOW);	 
-    }
-    else if(outNum == 3) 
-    {
-        std::cout << "OUT no.3" << std::endl;
-        bcm2835_gpio_write(5, HIGH);
-        bcm2835_gpio_write(6, HIGH);
-        bcm2835_gpio_write(13, LOW);	 
-    }
-    else if(outNum == 4) 
-    {
-        std::cout << "OUT no.4" << std::endl;
-        bcm2835_gpio_write(5, LOW);
-        bcm2835_gpio_write(6, LOW);
-        bcm2835_gpio_write(13, HIGH);	 
-    }
-    else if(outNum == 5) 
-    {
-        std::cout << "OUT no.5" << std::endl;
-        bcm2835_gpio_write(5, HIGH);
-        bcm2835_gpio_write(6, LOW);
-        bcm2835_gpio_write(13, HIGH);	 
-    }
+    mux.setCtrlPins(5,6,13)
+    ->addStateToQueue(LOW,LOW,LOW)
+    ->addStateToQueue(HIGH,LOW,LOW)
+    ->addStateToQueue(LOW,HIGH,LOW)
+    ->addStateToQueue(HIGH,HIGH,LOW)
+    ->addStateToQueue(LOW,LOW,HIGH)
+    ->addStateToQueue(HIGH,LOW,HIGH)
+    ->begin();
     
     printf("Pulse width set to %d\n", pWidth);
-    while(timeout)
+
+    std::thread t1(worker, pWidth, std::ref(mux), timeoutSet, std::ref(timeout));
+    std::thread t2(scheduler);
+     
+    t1.join();
+    t2.join();
+    
+    return 0;
+}
+
+void worker(int pWidth, Multiplexer& mux, bool timeoutSet, int& timeout)
+{
+    printf("Worker thread started!\n");
+    std::unique_lock<std::mutex> lk(mtx);
+    
+    while(!done)
     {
          pwmWrite(18, pWidth);
-         delay(1000);
+         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+         //delay(1000);
 
-         if(timeoutSet)
+         mux.nextState();
+         
+         if(timeoutSet && timeout>0)
+         {
+             printf("Timeout = %d\n", timeout);
              timeout--;
+         }
+         else if(timeoutSet)
+         {
+             printf("Timeout = %d\n", timeout);
+             printf("Scheduler informed about job is done...\n");
+             lk.unlock();
+             cv.notify_all();
+             std::this_thread::sleep_for(std::chrono::milliseconds(100)); // stop to be sure scheduler received cv
+             lk.lock();
+         }
     }
+}
 
-    return 0;
+void scheduler()
+{
+    printf("Scheduler thread started!\n");
+    std::unique_lock<std::mutex> lk(mtx);
+    cv.wait(lk, []{ return timeout == 0; });
+    std::cout << "PWM worker done his work..." << std::endl;
+    done = true;
 }
