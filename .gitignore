@@ -80,10 +80,10 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 
-
 ############################## Others
 build/
 # graphml files
 *.graphml
 SimpleSocketServer/.vscode
 RoboUI/js_backend
+.idea
