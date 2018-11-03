@@ -72,8 +72,8 @@ int main(int argc, char **argv)
         info = "MPU6050 no." +std::to_string(muxCounter%3)+ " is working";
         std::cout << "--- [" << info << "] ---" << std::endl;
         std::cout << "x: " << ax << ", y: " << ay << ", z: " << az << std::endl;
-        //mux.nextState();
-        //muxCounter++;
+        mux.nextState();
+        muxCounter++;
         delay(50);
     }
     

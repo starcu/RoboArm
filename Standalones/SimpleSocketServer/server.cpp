@@ -54,7 +54,7 @@ void SimpleSocketServer::listenOnSocket()
     }
 }
 
-/*
+
 int main()
 {
     SimpleSocketServer server(8080, "127.0.0.1");
@@ -63,4 +63,4 @@ int main()
 
     return 0;
 }
-*/
+

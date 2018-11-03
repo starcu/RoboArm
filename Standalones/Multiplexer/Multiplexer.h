@@ -35,6 +35,7 @@
 #include <iostream>
 #include <string>
 
+
 struct State
 {
     State(uint8_t _s0, uint8_t _s1, uint8_t _s2) : s0(_s0), s1(_s1), s2(_s2) {}
