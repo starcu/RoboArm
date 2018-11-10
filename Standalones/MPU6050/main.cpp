@@ -18,8 +18,7 @@ To compile on a Raspberry Pi (1 or 2)
  */
 
 #include <stdio.h>
-#include "I2Cdev.h"
-#include "MPU6050.h"
+#include "MPU6050Class.h"
 #include <math.h>
 #include <iostream>
 
@@ -47,21 +46,17 @@ int main(int argc, char **argv)
          accelgyro.getYGyroOffset(),
          accelgyro.getZGyroOffset());
     */
-    
-    I2Cdev::initialize();
-    MPU6050 accelgyro;
-    int16_t ax, ay, az;
-    int16_t gx, gy, gz;
+
+    MPU m6050;
     
     uint64_t muxCounter = 0;
     std::string info;
     
     while (true) 
     {
-        accelgyro.initialize();
-        accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-        std::cout << "x: " << ax << ", y: " << ay << ", z: " << az << std::endl;
-	delay(50);
+        m6050.getMeasueremnts();
+        std::cout << "x: " << m6050.getAccelX() << ", y: " << m6050.getAccelY() << ", z: " << m6050.getAccelZ() << std::endl;
+	    delay(50);
     }
     
     return 1; 
