@@ -52,6 +52,16 @@ Multiplexer* Multiplexer::addStateToQueue(uint8_t s0, uint8_t s1, uint8_t s2)
     return this;
 }
 
+Multiplexer* Multiplexer::addStateToQueue(State& s)
+{
+#ifdef DEBUG
+    std::cout << "[" << __func__ << "]" << std::endl;
+#endif
+
+    states.emplace_back(s);
+    return this;
+}
+
 void Multiplexer::begin()
 {
     #ifdef DEBUG
@@ -66,7 +76,7 @@ void Multiplexer::prevState()
     std::cout << "[" << __func__ << "]" << std::endl;
     #endif        
             
-    static auto riter = states.rbegin();
+    auto riter = states.rbegin();
     
     for(; riter != states.rend(); ++riter)
     {
@@ -88,7 +98,7 @@ void Multiplexer::nextState()
     std::cout << "[" << __func__ << "]" << std::endl;
     #endif
 
-    static auto iter = states.begin();
+    auto iter = states.begin();
      
     for(; iter != states.end(); ++iter)
     {

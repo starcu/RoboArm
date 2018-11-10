@@ -85,6 +85,7 @@ public:
     
     Multiplexer* setCtrlPins(uint8_t _gpio0, uint8_t _gpio1, uint8_t _gpio2);
     Multiplexer* addStateToQueue(uint8_t s0, uint8_t s1, uint8_t s2);
+    Multiplexer* addStateToQueue(State& s);
     
     void begin();
     
