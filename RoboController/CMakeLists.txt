@@ -5,17 +5,17 @@ project(RoboController)
 set(CMAKE_CXX_FLAGS_DEBUG "-std=c++0x -DDEBUG=1 -Wall -g -O3")
 set(CMAKE_CXX_FLAGS_RELEASE "-std=c++0x -Wall -g -O3")
 
+find_package(Boost REQUIRED)
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
 file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/) # dir for executables
 
-find_package(Boost REQUIRED)
-
-add_executable(robo src/RoboControllerMain.cpp src/RoboController.cpp)
+add_executable(robo src/RoboControllerMain.cpp src/RoboController.cpp src/RoboLogger.cpp)
 
 include_directories(${PROJECT_SOURCE_DIR}/src
 		${PROJECT_SOURCE_DIR}/include
 		/home/pi/RoboArm/Standalones/Multiplexer/
+		/home/pi/RoboArm/Standalones/MPU6050/
 		/home/pi/RoboArm/Standalones/ServoCtrl/
 		/home/pi/RoboArm/Standalones/SimpleSocketServer/)
 
