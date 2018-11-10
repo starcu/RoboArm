@@ -6,46 +6,36 @@
 #include <functional>
 #include <chrono>
 #include <mutex>
-#include <condition_variable>
-#include "Multiplexer.h"
-
-#define RANGE_MIN 544
-#define RANGE_MAX 2400
+#include "Servo.h"
 
 std::condition_variable cv;
 std::mutex mtx;
 int timeout = 1;
 bool done = false;
-void worker(int pWidth, Multiplexer& mux, bool timeoutSet, int& timeout);
+void worker(int pWidth, bool timeoutSet, int& timeout);
 void scheduler();
 
 int main (int argc, char** argv)
 {
     //PWM
-    wiringPiSetupGpio();
-    pinMode (18, PWM_OUTPUT) ;
-    pwmSetMode (PWM_MODE_MS);
-    pwmSetRange (20000);
-    pwmSetClock (19.2);
+    Servo servo(18);
 
-    int pWidth = 0; // minimum 0.5444ms
+    uint16_t pWidth = 0; // minimum 0.5444ms
     bool timeoutSet = false;
 
     try
     {
        pWidth = std::stoi(argv[1]);
-    } 
+    }
     catch(...)
     {
        printf("Pulse width not set! Exiting...\n");
        exit(0);
     }
 
-    if(pWidth < RANGE_MIN || pWidth > RANGE_MAX)
-    {
-        printf("Pulse width (%d) out of range (%d, %d)! Exiting...t\n", pWidth, RANGE_MIN, RANGE_MAX);
-        exit(0);
-    }
+    servo.setWidth(4543);
+
+    std::cout << "WIDTH = " << servo.getWidth() << std::endl;
 
     try
     {
@@ -59,21 +49,9 @@ int main (int argc, char** argv)
        //timeout = 1;
     }
 
-    // MUX
-    Multiplexer mux;
-    
-    mux.setCtrlPins(5,6,13)
-    ->addStateToQueue(LOW,LOW,LOW)
-    ->addStateToQueue(HIGH,LOW,LOW)
-    ->addStateToQueue(LOW,HIGH,LOW)
-    ->addStateToQueue(HIGH,HIGH,LOW)
-    ->addStateToQueue(LOW,LOW,HIGH)
-    ->addStateToQueue(HIGH,LOW,HIGH)
-    ->begin();
-    
     printf("Pulse width set to %d\n", pWidth);
 
-    std::thread t1(worker, pWidth, std::ref(mux), timeoutSet, std::ref(timeout));
+    std::thread t1(worker, pWidth, timeoutSet, std::ref(timeout));
     std::thread t2(scheduler);
      
     t1.join();
@@ -82,7 +60,7 @@ int main (int argc, char** argv)
     return 0;
 }
 
-void worker(int pWidth, Multiplexer& mux, bool timeoutSet, int& timeout)
+void worker(int pWidth, bool timeoutSet, int& timeout)
 {
     printf("Worker thread started!\n");
     std::unique_lock<std::mutex> lk(mtx);
@@ -92,8 +70,6 @@ void worker(int pWidth, Multiplexer& mux, bool timeoutSet, int& timeout)
          pwmWrite(18, pWidth);
          std::this_thread::sleep_for(std::chrono::milliseconds(1000));
          //delay(1000);
-
-         mux.nextState();
          
          if(timeoutSet && timeout>0)
          {
@@ -106,7 +82,7 @@ void worker(int pWidth, Multiplexer& mux, bool timeoutSet, int& timeout)
              printf("Scheduler informed about job is done...\n");
              lk.unlock();
              cv.notify_all();
-             std::this_thread::sleep_for(std::chrono::milliseconds(100)); // stop to be sure scheduler received cv
+             std::this_thread::sleep_for(std::chrono::milliseconds(100)); // stop to be sure scheduler received notification
              lk.lock();
          }
     }
