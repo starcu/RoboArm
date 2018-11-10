@@ -1,2 +1,2 @@
-cd build
+cd cmake-build-debug-remoterpi
 make clean

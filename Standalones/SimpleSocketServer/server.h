@@ -13,15 +13,15 @@
 class SimpleSocketServer
 {
     private:
-    std::string address_str;
-    struct sockaddr_in address;
-    int addrlen = sizeof(address);
     unsigned int port = 8080;
     unsigned int server_fd, new_socket, valread;
     int opt = 1;
-
+    std::string address_str;
+    struct sockaddr_in address;
+    int addrlen = sizeof(address);
+    
     unsigned int max_buffersize = 1024;
-    char* standard_response = "Hello from C++ server!";
+    const char* standard_response = "Hello from C++ server!";
     char* response;
 
     void prepareResponse();
