@@ -20,9 +20,10 @@ include_directories(${PROJECT_SOURCE_DIR}/src
 		/home/pi/RoboArm/Standalones/SimpleSocketServer/)
 
 find_library(MUX_LIB multiplexer HINTS /home/pi/RoboArm/Standalones/Multiplexer/${CMAKE_BUILD_TYPE}/lib/)
+find_library(MPU6050_LIB servo HINTS /home/pi/RoboArm/Standalones/MPU6050/${CMAKE_BUILD_TYPE}/lib/)
 find_library(SERVO_LIB servo HINTS /home/pi/RoboArm/Standalones/ServoCtrl/${CMAKE_BUILD_TYPE}/lib/)
 find_library(SOCKET_LIB simplesocket HINTS /home/pi/RoboArm/Standalones/SimpleSocketServer/${CMAKE_BUILD_TYPE}/lib/)
-target_link_libraries(robo ${SOCKET_LIB} ${MUX_LIB} ${SERVO_LIB} m pthread)
+target_link_libraries(robo ${SOCKET_LIB} ${MUX_LIB} ${SERVO_LIB} ${MPU6050_LIB} m pthread)
 
 #set(CMAKE_BUILD_DIRECTORY ../build)
 

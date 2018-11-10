@@ -8,6 +8,4 @@ Robo::Robo()
     ->addStateToQueue(HIGH,LOW,LOW)
     ->addStateToQueue(LOW,HIGH,LOW)
     ->begin();
-
-
 }

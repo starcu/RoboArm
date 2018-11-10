@@ -13,7 +13,7 @@ file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin) # dir for exe
 file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib) # dir for libraries
 
 add_executable(mpu main.cpp)
-add_library(mpu6050 I2Cdev.cpp MPU6050.cpp)
+add_library(mpu6050 I2Cdev.cpp MPU6050.cpp MPU6050Class.cpp)
 
 target_link_libraries(mpu6050 bcm2835 wiringPi pthread m)
 target_link_libraries(mpu mpu6050)

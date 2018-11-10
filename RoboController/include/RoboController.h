@@ -10,6 +10,8 @@
 #include "server.h"
 #include "Multiplexer.h"
 #include "Servo.h"
+//#include "I2Cdev.h"
+#include "MPU6050.h"
 
 #define SERVO_PWM_PIN 18
 #define SERVO_PWM_MUX_S0 1
@@ -34,6 +36,10 @@ public:
 
 private:
     Servo       servo{SERVO_PWM_PIN};
+
+    //MPU6050 accelgyro;
+    //int16_t ax, ay, az;
+    //int16_t gx, gy, gz;
 
     Multiplexer mpuMux;
     Multiplexer servoMux;
