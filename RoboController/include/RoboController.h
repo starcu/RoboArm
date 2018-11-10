@@ -5,13 +5,16 @@
 #ifndef ROBOCONTROLLER_ROBOCONTROLLER_H
 #define ROBOCONTROLLER_ROBOCONTROLLER_H
 
+#ifndef BCM2835_NO_DELAY_COMPATIBILITY
+    #define BCM2835_NO_DELAY_COMPATIBILITY
+#endif
+
 #include <thread>
 #include <array>
 #include "server.h"
 #include "Multiplexer.h"
 #include "Servo.h"
-//#include "I2Cdev.h"
-#include "MPU6050.h"
+#include "MPU6050Class.h"
 
 #define SERVO_PWM_PIN 18
 #define SERVO_PWM_MUX_S0 1
@@ -35,11 +38,8 @@ public:
     Robo();
 
 private:
-    Servo       servo{SERVO_PWM_PIN};
-
-    //MPU6050 accelgyro;
-    //int16_t ax, ay, az;
-    //int16_t gx, gy, gz;
+    //Servo       servo{SERVO_PWM_PIN};
+    //MPU         mpu;
 
     Multiplexer mpuMux;
     Multiplexer servoMux;
@@ -47,7 +47,7 @@ private:
     std::thread socketThread;
     std::thread mpuMuxThread;
     std::thread servoMuxThread;
-    RoboState   state = OK;
+    RoboState   state = RoboState::OK;
 };
 
 #endif //ROBOCONTROLLER_ROBOCONTROLLER_H

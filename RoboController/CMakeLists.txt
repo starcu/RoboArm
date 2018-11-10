@@ -15,15 +15,15 @@ add_executable(robo src/RoboControllerMain.cpp src/RoboController.cpp src/RoboLo
 include_directories(${PROJECT_SOURCE_DIR}/src
 		${PROJECT_SOURCE_DIR}/include
 		/home/pi/RoboArm/Standalones/Multiplexer/
-		/home/pi/RoboArm/Standalones/MPU6050/
 		/home/pi/RoboArm/Standalones/ServoCtrl/
+		/home/pi/RoboArm/Standalones/MPU6050/
 		/home/pi/RoboArm/Standalones/SimpleSocketServer/)
 
 find_library(MUX_LIB multiplexer HINTS /home/pi/RoboArm/Standalones/Multiplexer/${CMAKE_BUILD_TYPE}/lib/)
-find_library(MPU6050_LIB servo HINTS /home/pi/RoboArm/Standalones/MPU6050/${CMAKE_BUILD_TYPE}/lib/)
+find_library(MPU6050_LIB mpu6050 HINTS /home/pi/RoboArm/Standalones/MPU6050/${CMAKE_BUILD_TYPE}/lib/)
 find_library(SERVO_LIB servo HINTS /home/pi/RoboArm/Standalones/ServoCtrl/${CMAKE_BUILD_TYPE}/lib/)
 find_library(SOCKET_LIB simplesocket HINTS /home/pi/RoboArm/Standalones/SimpleSocketServer/${CMAKE_BUILD_TYPE}/lib/)
-target_link_libraries(robo ${SOCKET_LIB} ${MUX_LIB} ${SERVO_LIB} ${MPU6050_LIB} m pthread)
+target_link_libraries(robo ${SOCKET_LIB} ${MUX_LIB} ${SERVO_LIB} ${MPU6050_LIB} bcm2835 wiringPi m pthread)
 
 #set(CMAKE_BUILD_DIRECTORY ../build)
 
