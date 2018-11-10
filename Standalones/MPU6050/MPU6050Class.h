@@ -10,10 +10,15 @@ public:
     MPU()
     {
         I2Cdev::initialize();
+        //accelgyro.initialize();
+    }
+
+    void initialize()
+    {
         accelgyro.initialize();
     }
 
-    void getMeasueremnts()
+    void getMeasurements()
     {
         accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
     }

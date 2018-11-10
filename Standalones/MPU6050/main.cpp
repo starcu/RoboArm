@@ -54,7 +54,7 @@ int main(int argc, char **argv)
     
     while (true) 
     {
-        m6050.getMeasueremnts();
+        m6050.getMeasurements();
         std::cout << "x: " << m6050.getAccelX() << ", y: " << m6050.getAccelY() << ", z: " << m6050.getAccelZ() << std::endl;
 	    delay(50);
     }

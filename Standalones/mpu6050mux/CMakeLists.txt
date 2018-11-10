@@ -12,11 +12,16 @@ include_directories(
 file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin) # dir for executables
 #file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib) # dir for libraries
 
-add_executable(mpu main.cpp I2Cdev.cpp MPU6050.cpp)
+add_executable(mpu main.cpp)
 
-include_directories(${PROJECT_SOURCE_DIR} /home/pi/RoboArm/Standalones/Multiplexer/)
+include_directories(${PROJECT_SOURCE_DIR} 
+/home/pi/RoboArm/Standalones/Multiplexer/
+/home/pi/RoboArm/Standalones/MPU6050/
+)
+
 find_library(MUX_LIB multiplexer HINTS /home/pi/RoboArm/Standalones/Multiplexer/${CMAKE_BUILD_TYPE}/lib/)
-target_link_libraries(mpu PUBLIC ${MUX_LIB} bcm2835 wiringPi pthread m)
+find_library(MPU6050_LIB mpu6050 HINTS /home/pi/RoboArm/Standalones/MPU6050/${CMAKE_BUILD_TYPE}/lib/)
+target_link_libraries(mpu ${MPU6050_LIB} ${MUX_LIB} bcm2835 wiringPi pthread m)
 
 #set(CMAKE_BUILD_DIRECTORY ../build)
 
