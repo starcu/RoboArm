@@ -89,5 +89,7 @@ RoboUI/js_backend
 .idea
 cmake-build-debug-remoterpi
 cmake-build-release-remoterpi
+cmake-build-debug
+cmake-build-release
 Debug
 Release
