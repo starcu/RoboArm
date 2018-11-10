@@ -48,6 +48,7 @@ int main(int argc, char **argv)
     */
 
     MPU m6050;
+    m6050.initialize();
     
     uint64_t muxCounter = 0;
     std::string info;
