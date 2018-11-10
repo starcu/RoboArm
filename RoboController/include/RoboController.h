@@ -38,6 +38,8 @@ public:
     Robo();
 
 private:
+    SimpleSocketServer server{8080, "127.0.0.1"};
+
     RoboState   state = RoboState::OK;
 
     Servo       servo{SERVO_PWM_PIN};
@@ -46,11 +48,13 @@ private:
     Multiplexer mpuMux;
     Multiplexer servoMux;
 
-    std::thread socketThread;
+    std::thread serverThread;
     std::thread mpuMuxThread;
     std::thread servoMuxThread;
 
-    SimpleSocketServer server(8080, "127.0.0.1");
+    void serverWorker();
+    void mpuWorker();
+    void servoWorker();
 };
 
 #endif //ROBOCONTROLLER_ROBOCONTROLLER_H
