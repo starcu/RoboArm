@@ -19,6 +19,7 @@ public:
 
     void setWidth(const uint16_t w);
     uint16_t getWidth() const;
+    void pwmStop();
 
 private:
     uint8_t gpio;

@@ -16,10 +16,11 @@ file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin) # dir for exe
 #file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib) # dir for libraries
 
 add_executable(servo main.cpp)
-include_directories(${PROJECT_SOURCE_DIR} /home/pi/RoboArm/Standalones/Multiplexer/)
+include_directories(${PROJECT_SOURCE_DIR} /home/pi/RoboArm/Standalones/Multiplexer/ /home/pi/RoboArm/Standalones/ServoCtrl/)
 find_library(MUX_LIB multiplexer HINTS /home/pi/RoboArm/Standalones/Multiplexer/${CMAKE_BUILD_TYPE}/lib/)
+find_library(SERVO_LIB servo HINTS /home/pi/RoboArm/Standalones/ServoCtrl/${CMAKE_BUILD_TYPE}/lib/)
 
-target_link_libraries(servo PUBLIC ${MUX_LIB} bcm2835 wiringPi pthread m)
+target_link_libraries(servo PUBLIC ${MUX_LIB} ${SERVO_LIB} bcm2835 wiringPi pthread m)
 
 #set(CMAKE_BUILD_DIRECTORY ../build)
 

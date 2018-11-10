@@ -1,5 +1,4 @@
 #include <Servo.h>
-#include <stdint-gcc.h>
 
 Servo::Servo(uint8_t _gpio, uint16_t initWidth): gpio(_gpio), width(initWidth)
 {
@@ -25,4 +24,9 @@ void Servo::setWidth(const uint16_t w)
 uint16_t Servo::getWidth() const
 {
     return width;
+}
+
+void Servo::pwmStop()
+{
+    pwmWrite(gpio, 0);
 }

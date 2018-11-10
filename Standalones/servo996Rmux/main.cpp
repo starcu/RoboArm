@@ -8,26 +8,20 @@
 #include <mutex>
 #include <condition_variable>
 #include "Multiplexer.h"
-
-#define RANGE_MIN 544
-#define RANGE_MAX 2400
+#include "Servo.h"
 
 std::condition_variable cv;
 std::mutex mtx;
 int timeout = 1;
 bool done = false;
-void worker(int pWidth, Multiplexer& mux, bool timeoutSet, int& timeout);
+void worker(Multiplexer& mux, bool timeoutSet, int& timeout);
 void scheduler();
+
+Servo servo(18);
+uint16_t gW = 0;
 
 int main (int argc, char** argv)
 {
-    //PWM
-    wiringPiSetupGpio();
-    pinMode (18, PWM_OUTPUT) ;
-    pwmSetMode (PWM_MODE_MS);
-    pwmSetRange (20000);
-    pwmSetClock (19.2);
-
     int pWidth = 0; // minimum 0.5444ms
     bool timeoutSet = false;
 
@@ -41,12 +35,6 @@ int main (int argc, char** argv)
        exit(0);
     }
 
-    if(pWidth < RANGE_MIN || pWidth > RANGE_MAX)
-    {
-        printf("Pulse width (%d) out of range (%d, %d)! Exiting...t\n", pWidth, RANGE_MIN, RANGE_MAX);
-        exit(0);
-    }
-
     try
     {
        timeout = std::stoi(argv[2]);
@@ -58,6 +46,9 @@ int main (int argc, char** argv)
         printf("Timeout not set, inf. mode on\n");
        //timeout = 1;
     }
+
+    servo.setWidth(pWidth);
+    gW = pWidth;
 
     // MUX
     Multiplexer mux;
@@ -73,7 +64,7 @@ int main (int argc, char** argv)
     
     printf("Pulse width set to %d\n", pWidth);
 
-    std::thread t1(worker, pWidth, std::ref(mux), timeoutSet, std::ref(timeout));
+    std::thread t1(worker, std::ref(mux), timeoutSet, std::ref(timeout));
     std::thread t2(scheduler);
      
     t1.join();
@@ -82,33 +73,33 @@ int main (int argc, char** argv)
     return 0;
 }
 
-void worker(int pWidth, Multiplexer& mux, bool timeoutSet, int& timeout)
+void worker(Multiplexer& mux, bool timeoutSet, int& timeout)
 {
     printf("Worker thread started!\n");
     std::unique_lock<std::mutex> lk(mtx);
     
     while(!done)
     {
-         pwmWrite(18, pWidth);
-         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-         //delay(1000);
+        servo.setWidth(gW);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        //delay(1000);
 
-         mux.nextState();
-         
-         if(timeoutSet && timeout>0)
-         {
-             printf("Timeout = %d\n", timeout);
-             timeout--;
-         }
-         else if(timeoutSet)
-         {
-             printf("Timeout = %d\n", timeout);
-             printf("Scheduler informed about job is done...\n");
-             lk.unlock();
-             cv.notify_all();
-             std::this_thread::sleep_for(std::chrono::milliseconds(100)); // stop to be sure scheduler received cv
-             lk.lock();
-         }
+        mux.nextState();
+
+        if(timeoutSet && timeout>0)
+        {
+            printf("Timeout = %d\n", timeout);
+            timeout--;
+        }
+        else if(timeoutSet)
+        {
+            printf("Timeout = %d\n", timeout);
+            printf("Scheduler informed about job is done...\n");
+            lk.unlock();
+            cv.notify_all();
+            std::this_thread::sleep_for(std::chrono::milliseconds(100)); // stop to be sure scheduler received cv
+            lk.lock();
+        }
     }
 }
 

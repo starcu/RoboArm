@@ -12,7 +12,7 @@ std::condition_variable cv;
 std::mutex mtx;
 int timeout = 1;
 bool done = false;
-void worker(int pWidth, bool timeoutSet, int& timeout);
+void worker(bool timeoutSet, int& timeout);
 void scheduler();
 
 int main (int argc, char** argv)
@@ -33,7 +33,7 @@ int main (int argc, char** argv)
        exit(0);
     }
 
-    servo.setWidth(4543);
+    servo.setWidth(pWidth);
 
     std::cout << "WIDTH = " << servo.getWidth() << std::endl;
 
@@ -51,23 +51,24 @@ int main (int argc, char** argv)
 
     printf("Pulse width set to %d\n", pWidth);
 
-    std::thread t1(worker, pWidth, timeoutSet, std::ref(timeout));
+    std::thread t1(worker, timeoutSet, std::ref(timeout));
     std::thread t2(scheduler);
      
     t1.join();
     t2.join();
-    
+
+    servo.pwmStop();
+
     return 0;
 }
 
-void worker(int pWidth, bool timeoutSet, int& timeout)
+void worker(bool timeoutSet, int& timeout)
 {
     printf("Worker thread started!\n");
     std::unique_lock<std::mutex> lk(mtx);
     
     while(!done)
     {
-         pwmWrite(18, pWidth);
          std::this_thread::sleep_for(std::chrono::milliseconds(1000));
          //delay(1000);
          
