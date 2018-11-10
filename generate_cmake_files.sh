@@ -1,12 +1,15 @@
-if [ -d "build" ]; then
-	rm -rf build
-fi
-mkdir build && cd build
-if [[ $1 = "release" ]]; then
+if [ $1 = "release" ]; then
 	build_type="Release"
+	dir="cmake-build-release-remoterpi"
 else
 	build_type="Debug"
+	dir="cmake-build-debug-remoterpi"
 fi
+
+if [ -d $dir ]; then
+        rm -rf $dir
+fi
+mkdir $dir && cd $dir
 
 echo "-- Build type" $build_type
 

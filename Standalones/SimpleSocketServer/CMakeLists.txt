@@ -19,7 +19,7 @@ add_library(simplesocket server.cpp server.h client.cpp client.h)
 add_executable(server server_main.cpp server.h)
 target_link_libraries(server simplesocket)
 
-add_executable(client client_main.cpp client h)
+add_executable(client client_main.cpp client.h)
 target_link_libraries(client simplesocket)
 
 set(EXECUTABLE_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/bin)

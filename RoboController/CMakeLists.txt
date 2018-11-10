@@ -1,14 +1,32 @@
 cmake_minimum_required (VERSION 3.0)
 
-project("RoboController")
+project(RoboController)
+
+set(CMAKE_CXX_FLAGS_DEBUG "-std=c++0x -DDEBUG=1 -Wall -g -O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-std=c++0x -Wall -g -O3")
+
+ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
 include_directories(
-		${PROJECT_SOURCE_DIR}/include/
-		${CMAKE_SOURCE_DIR}/SimpleSocketServer/
-		)
+		${PROJECT_SOURCE_DIR}/
+)
 
-add_executable(RoboController src/RoboControllerMain.cpp src/RoboController.cpp)
+file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/) # dir for executables
 
-target_link_libraries(RoboController simplesocketserver) 
+find_package(Boost REQUIRED)
 
-set(CMAKE_BUILD_DIRECTORY ../build)
+add_executable(robo src/RoboControllerMain.cpp src/RoboController.cpp include/RoboController.h)
+
+include_directories(${PROJECT_SOURCE_DIR}
+		/home/pi/RoboArm/Standalones/Multiplexer/
+		/home/pi/RoboArm/Standalones/ServoCtrl/
+		/home/pi/RoboArm/Standalones/SimpleSocketServer/)
+
+find_library(MUX_LIB multiplexer HINTS /home/pi/RoboArm/Standalones/Multiplexer/${CMAKE_BUILD_TYPE}/lib/)
+find_library(SERVO_LIB servo HINTS /home/pi/RoboArm/Standalones/ServoCtrl/${CMAKE_BUILD_TYPE}/lib/)
+find_library(SOCKET_LIB simplesocket HINTS /home/pi/RoboArm/Standalones/SimpleSocketServer/${CMAKE_BUILD_TYPE}/lib/)
+target_link_libraries(robo ${SOCKET_LIB} ${MUX_LIB} ${SERVO_LIB} m pthread)
+
+#set(CMAKE_BUILD_DIRECTORY ../build)
+
+set(EXECUTABLE_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/)
