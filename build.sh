@@ -5,4 +5,4 @@ else
     echo "Debug build started..."
     cd cmake-build-debug-remoterpi
 fi
-make
+make -j2

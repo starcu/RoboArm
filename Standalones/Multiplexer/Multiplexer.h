@@ -13,14 +13,14 @@
  * Created on 1 listopada 2018, 23:11
  */
 
-/*         HCT4051
+/*        CD74HC4051
  *      --------------
  *     |  o           |     
- *    -| O4       Vcc |-
- *    -| O6        O2 |-
- *    -| C_IN/OUT  O1 |-
- *    -| O7        O0 |-
- *    -| O5        O3 |-
+ *    -| Y4       Vcc |-
+ *    -| Y6        Y2 |-
+ *    -| C_IN/OUT  Y1 |-
+ *    -| Y7        Y0 |-
+ *    -| Y5        Y3 |-
  *    -| EN        S0 |-
  *    -| Vee       S1 |-
  *    -| GND       S2 |-

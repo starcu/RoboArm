@@ -19,7 +19,7 @@ std::ostream& operator<< (std::ostream &out, const State &s) {
 
 Multiplexer* Multiplexer::setCtrlPins(uint8_t _gpio0, uint8_t _gpio1, uint8_t _gpio2)
 {
-    #ifdef DEBUG
+    #ifdef VERBOSE
     std::cout << "[" << __func__ << "] "
             << "Pins set: " 
             << std::to_string(_gpio0) 
@@ -44,7 +44,7 @@ Multiplexer* Multiplexer::setCtrlPins(uint8_t _gpio0, uint8_t _gpio1, uint8_t _g
 
 Multiplexer* Multiplexer::addStateToQueue(uint8_t s0, uint8_t s1, uint8_t s2)
 {
-    #ifdef DEBUG
+    #ifdef VERBOSE
     std::cout << "[" << __func__ << "]" << std::endl;
     #endif
 
@@ -54,7 +54,7 @@ Multiplexer* Multiplexer::addStateToQueue(uint8_t s0, uint8_t s1, uint8_t s2)
 
 Multiplexer* Multiplexer::addStateToQueue(State& s)
 {
-#ifdef DEBUG
+#ifdef VERBOSE
     std::cout << "[" << __func__ << "]" << std::endl;
 #endif
 
@@ -64,7 +64,7 @@ Multiplexer* Multiplexer::addStateToQueue(State& s)
 
 void Multiplexer::begin()
 {
-    #ifdef DEBUG
+    #ifdef VERBOSE
     std::cout << "[" << __func__ << "] MUX start working..." << std::endl;
     #endif
     this->setCurrentState(states.front()); // first state from vector
@@ -72,7 +72,7 @@ void Multiplexer::begin()
 
 void Multiplexer::prevState()
 {
-    #ifdef DEBUG
+    #ifdef VERBOSE
     std::cout << "[" << __func__ << "]" << std::endl;
     #endif        
             
@@ -94,7 +94,7 @@ void Multiplexer::prevState()
 
 void Multiplexer::nextState()
 {
-    #ifdef DEBUG
+    #ifdef VERBOSE
     std::cout << "[" << __func__ << "]" << std::endl;
     #endif
 
@@ -118,7 +118,7 @@ void Multiplexer::setCurrentState(State& s)
 { 
     currentState = s;
     
-    #ifdef DEBUG
+    #ifdef VERBOSE
     std::cout << "(State& s)] Setting state " 
               << std::string(currentState) << std::endl;
     #endif
@@ -132,7 +132,7 @@ void Multiplexer::setCurrentState(uint8_t _gpio0, uint8_t _gpio1, uint8_t _gpio2
 {
     currentState = {_gpio0, _gpio1, _gpio2};
     
-    #ifdef DEBUG
+    #ifdef VERBOSE
     std::cout << "Setting state " 
               << std::string(currentState) << std::endl;
     #endif

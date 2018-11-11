@@ -35,9 +35,9 @@ void SimpleSocketServer::createSocket()
     }
 }
 
-void SimpleSocketServer::listenOnSocket()
+void SimpleSocketServer::listenOnSocket(bool block)
 {
-    while(1)
+    while(block)
     {
         if ((new_socket = accept(server_fd, 
                                 (struct sockaddr*)&address, 

@@ -29,6 +29,6 @@ class SimpleSocketServer
     public:
     SimpleSocketServer(int _port, std::string address): port(_port), address_str(address) {}
     void createSocket();
-    void listenOnSocket();
+    void listenOnSocket(bool block=false);
     ~SimpleSocketServer() { }
 };
