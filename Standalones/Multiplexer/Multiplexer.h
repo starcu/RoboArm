@@ -34,7 +34,8 @@
 #include <vector>
 #include <iostream>
 #include <string>
-
+#include <functional>
+#include <memory>
 
 struct State
 {
@@ -72,12 +73,12 @@ public:
     
     virtual ~Multiplexer() 
     {
-        #ifdef DEBUG
+        #ifdef VERBOSE
         std::cout << "[" << __func__ << "]" << std::endl;
         std::cout << "Setting all pins to high state." << std::endl;
         #endif
 
-        // set common state for rpi (all pins high)
+        // set common state for rpi gpios (all pins high)
         bcm2835_gpio_write(gpio0, HIGH);
         bcm2835_gpio_write(gpio1, HIGH);
         bcm2835_gpio_write(gpio2, HIGH);
@@ -94,6 +95,20 @@ public:
     
     void setCurrentState(State& s);
     void setCurrentState(uint8_t _gpio0, uint8_t _gpio1, uint8_t _gpio2);
+
+    template <class F, class OBJ, class ...Args>
+    void performForEveryState(F f, OBJ o, Args ...args)
+    {
+        auto cs = this->getCurrentState();
+        for(auto& s: states)
+        {
+            this->setCurrentState(s);
+            auto fnc = std::bind(f, o, std::forward<Args>(args)...);
+            fnc(args...);
+        }
+
+        this->setCurrentState(cs); // back to the state before loop
+    }
 
     const State getCurrentState() const
     {

@@ -5,7 +5,6 @@ Robo::Robo(): initLock(initMtx),
               servoMuxThread(&Robo::servoWorker, this),
               mpuMuxThread(&Robo::mpuWorker, this)
 {
-    initDoneCV.notify_all();
     servoMux
     .setCtrlPins(SERVO_MUX_S0, SERVO_MUX_S1, SERVO_MUX_S2)
     ->addStateToQueue(LOW,LOW,LOW)    // M1Y0
@@ -26,38 +25,40 @@ Robo::Robo(): initLock(initMtx),
     RoboLogger::logger()->severity_log(normal, std::string(__func__), "MPU multiplexer initialized");
 
     RoboLogger::logger()->severity_log(normal, std::string(__func__), "Setting Robo state to OK, unlocking initial lock and sending message to workers");
-    state = RoboState::OK;
+
     initLock.unlock();
+
+    {
+        std::unique_lock<std::mutex> lock(initMtx);
+        state = RoboState::OK;
+    }
+
     initDoneCV.notify_all();
 }
 
 void Robo::serverWorker()
 {
-    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Server worker thread started");
-    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Server (127.0.0.1) will listen on port 8080");
-
     server.createSocket();
-    RoboLogger::logger()->severity_log(normal, std::string(__func__),"Server socket created");
+    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Server (127.0.0.1) worker thread started, server will listen on port 8080");
 
     while(serverWorkerOK)
         server.listenOnSocket();
 
-    RoboLogger::logger()->severity_log(normal, std::string(__func__),"Server socket done his work");
+    RoboLogger::logger()->severity_log(normal, std::string(__func__),"SERVER worker done his work");
 }
 
-void Robo::servoWorker()
-{
-    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Servo worker thread waiting for initialization to be done");
-    //std::unique_lock<std::mutex> lk(initMtx);
-    //initDoneCV.wait(lk, [this]{ std::cout << "servoWorker notified, state = " + RoboStateToString(state) << std::endl; return state == RoboState::OK;});
-
-    while(RoboState::OK != state)
+void Robo::servoWorker() {
+    RoboLogger::logger()->severity_log(normal, std::string(__func__),
+                                       "Servo worker thread waiting for initialization to be done");
     {
-        std::cout << "servoWorker notified, state = " + RoboStateToString(state) << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::unique_lock<std::mutex> lk(initMtx);
+        initDoneCV.wait(lk, [this] {
+            return state == RoboState::OK;
+        });
     }
 
-    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Init done, Servo worker thread started");
+    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Robot init done, Servo worker thread started");
+    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Settings all servos to base positions");
 
     while(servoWorkerOK)
     {
@@ -68,32 +69,34 @@ void Robo::servoWorker()
             servoMux.nextState();
         }
 
-        RoboLogger::logger()->timed_log(normal, 10000, std::string(__func__), "All servos set to base position");
         std::this_thread::sleep_for(std::chrono::milliseconds(SERVO_MUX_WORKER_POLL_INTERVAL_MS));
     }
+
+    RoboLogger::logger()->severity_log(normal, std::string(__func__),"SERVO worker done his work");
 }
 
 void Robo::mpuWorker()
 {
-    RoboLogger::logger()->severity_log(normal, std::string(__func__), "MPU worker thread waiting for initialization to be done");
-    //std::unique_lock<std::mutex> lk(initMtx);
-    //initDoneCV.wait(lk, [this]{ std::cout << "mpuWorker notified, state = " + RoboStateToString(state) << std::endl; return state == RoboState::OK;});
+    RoboLogger::logger()->severity_log(normal, std::string(__func__),
+            "MPU worker thread waiting for initialization to be done");
 
-    while(RoboState::OK != state)
     {
-        std::cout << "mpuWorker notified, state = " + RoboStateToString(state) << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::unique_lock<std::mutex> lk(initMtx);
+        initDoneCV.wait(lk, [this] {
+            return state == RoboState::OK;
+        });
     }
 
-    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Init done, MPU worker thread started");
+    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Robot init done, MPU worker thread started");
+    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Initializing all sensors");
 
-    uint64_t cnt = 0;
+    mpuMux.performForEveryState(&MPU::initialize, mpu); // initialize all sensors
+
     while(mpuWorkerOK)
     {
-        // first functionality is to just read data from all accels and gyros pairs
+        // first functionality is just to read data from all accels and gyros pairs
         for(auto& ag: accGyro)
         {
-            mpu.initialize();
             mpu.getMeasurements();
 
             std::get<0>(ag).x = mpu.getAccelX();
@@ -104,13 +107,22 @@ void Robo::mpuWorker()
             std::get<1>(ag).y = mpu.getGyroY();
             std::get<1>(ag).z = mpu.getGyroZ();
 
+            static uint64_t cnt = 0;
+            std::stringstream msg;
+            msg << "Last MPU[" << cnt%3 << "] positions were: AX:["
+                << mpu.getAccelX() << "] AY:[" << mpu.getAccelY() << "] AX:[" << mpu.getAccelZ() << "] GX:["
+                << mpu.getGyroX() << "] GY:[" << mpu.getGyroY() << "] GZ:[" << mpu.getGyroZ() << "]";
+            cnt++;
+
             //std::cout << "[ MPU6050 number " + std::to_string(cnt%3) + " ]" << std::endl;
             //std::cout << "\tax=" << std::get<0>(ag).x << "\tay=" << std::get<0>(ag).y << "\taz=" << std::get<0>(ag).z << std::endl;
             //std::cout << "\tgx=" << std::get<1>(ag).x << "\tgy=" << std::get<1>(ag).y << "\tgz=" << std::get<1>(ag).z << std::endl;
+
             mpuMux.nextState();
-            cnt++;
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(MPU_MUX_WORKER_POLL_INTERVAL_MS));
     }
+
+    RoboLogger::logger()->severity_log(normal, std::string(__func__),"MPU worker done his work");
 }

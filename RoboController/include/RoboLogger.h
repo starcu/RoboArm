@@ -21,6 +21,7 @@
 #include <boost/log/sources/severity_feature.hpp>
 #include <boost/log/sources/record_ostream.hpp>
 #include <boost/log/attributes.hpp>
+#include <sstream>
 #include <mutex>
 
 namespace logging = boost::log;

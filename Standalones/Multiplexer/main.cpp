@@ -12,11 +12,24 @@
  */
 
 #include <cstdlib>
+#include <random>
 #include "Multiplexer.h"
  
 /*
  * 
  */
+
+struct RandomPrinter
+{
+    void printRandom()
+    {
+        std::random_device rd;
+        std::mt19937 mt(rd());
+        std::uniform_int_distribution<> dist(1, 100);
+        std::cout << dist(mt) << std::endl;
+    }
+};
+
 int main(int argc, char** argv) 
 {
     Multiplexer testMux;
@@ -46,6 +59,9 @@ int main(int argc, char** argv)
         delay(100);
         testMux.prevState();
     }
+
+    RandomPrinter rp;
+    testMux.performForEveryState(&RandomPrinter::printRandom, rp);
             
     return 0;
 }
