@@ -16,6 +16,7 @@
 #include "Servo.h"
 #include "MPU6050Class.h"
 #include "RoboLogger.h"
+#include "KalmanFilter.h"
 
 #define SERVO_PIN 18
 #define SERVO_MUX_S0 5
@@ -109,8 +110,9 @@ private:
 
     RoboState   state;
 
-    MPU         mpu;
-    Servo       servo{SERVO_PIN};
+    MPU          mpu;
+    KalmanFilter mpuFilter;
+    Servo        servo{SERVO_PIN};
 
     Multiplexer servoMux;
     Multiplexer mpuMux;
@@ -131,15 +133,15 @@ private:
     std::vector<uint16_t> baseFigurePWMWidths {1472, 1472, 1936, 1008, 1472, 1200};
 
     // servo limits widths
-    std::vector<servoLimits> servosLimits;
+    std::vector<servoLimits> servosLimits
     {
-        /*0*/{544, 2400, 1472},
-        /*1*/{1008, 2400, 1472},
-        /*2*/{1008, 2400, 1936},
-        /*3*/{544, 2400, 1008},
-        /*4*/{544, 2400, 1472},
-        /*5*/{1100, 1550, 1200}
-    }
+        /*0*/servoLimits{544, 2400, 1472},
+        /*1*/servoLimits{1008, 2400, 1472},
+        /*2*/servoLimits{1008, 2400, 1936},
+        /*3*/servoLimits{544, 2400, 1008},
+        /*4*/servoLimits{544, 2400, 1472},
+        /*5*/servoLimits{1100, 1550, 1200}
+    };
 
     // accelerometers and gyros
     std::vector<std::pair<accel, gyro>> accGyro {std::make_pair(accel(), gyro()),
