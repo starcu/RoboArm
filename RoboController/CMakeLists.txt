@@ -10,7 +10,7 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
 file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/) # dir for executables
 
-add_executable(robo src/RoboControllerMain.cpp src/RoboController.cpp src/RoboLogger.cpp)
+add_executable(robo src/RoboControllerMain.cpp src/RoboController.cpp src/RoboLogger.cpp src/KalmanFilter.cpp)
 
 include_directories(${PROJECT_SOURCE_DIR}/src
 		${PROJECT_SOURCE_DIR}/include
