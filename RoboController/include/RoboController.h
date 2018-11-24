@@ -29,6 +29,13 @@
 #define MPU_MUX_S2 22
 #define MPU_MUX_WORKER_POLL_INTERVAL_MS 20
 
+struct servoLimits
+{
+    uint16_t min;
+    uint16_t max;
+    uint16_t base;
+};
+
 enum class RoboState
 {
     UNINITIALIZED,
@@ -122,6 +129,17 @@ private:
 
     //base positions for all servos
     std::vector<uint16_t> baseFigurePWMWidths {1472, 1472, 1936, 1008, 1472, 1200};
+
+    // servo limits widths
+    std::vector<servoLimits> servosLimits;
+    {
+        /*0*/{544, 2400, 1472},
+        /*1*/{1008, 2400, 1472},
+        /*2*/{1008, 2400, 1936},
+        /*3*/{544, 2400, 1008},
+        /*4*/{544, 2400, 1472},
+        /*5*/{1100, 1550, 1200}
+    }
 
     // accelerometers and gyros
     std::vector<std::pair<accel, gyro>> accGyro {std::make_pair(accel(), gyro()),

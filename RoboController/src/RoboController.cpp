@@ -107,6 +107,7 @@ void Robo::mpuWorker()
             std::get<1>(ag).y = mpu.getGyroY();
             std::get<1>(ag).z = mpu.getGyroZ();
 
+            /*
             static uint64_t cnt = 0;
             std::stringstream msg;
             msg << "Last MPU[" << cnt%3 << "] positions were: AX:["
@@ -114,11 +115,11 @@ void Robo::mpuWorker()
                 << mpu.getGyroX() << "] GY:[" << mpu.getGyroY() << "] GZ:[" << mpu.getGyroZ() << "]";
             cnt++;
 
-            std::cout << msg.str() << std::endl;
-
+            //std::cout << msg.str() << std::endl;
             //std::cout << "[ MPU6050 number " + std::to_string(cnt%3) + " ]" << std::endl;
             //std::cout << "\tax=" << std::get<0>(ag).x << "\tay=" << std::get<0>(ag).y << "\taz=" << std::get<0>(ag).z << std::endl;
             //std::cout << "\tgx=" << std::get<1>(ag).x << "\tgy=" << std::get<1>(ag).y << "\tgz=" << std::get<1>(ag).z << std::endl;
+            */
 
             mpuMux.nextState();
         }
