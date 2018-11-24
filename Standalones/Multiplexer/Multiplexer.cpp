@@ -92,6 +92,30 @@ void Multiplexer::prevState()
     setCurrentState(*riter);
 }
 
+void Multiplexer::prevStateWithDelay(uint32_t delayTime)
+{
+#ifdef VERBOSE
+    std::cout << "[" << __func__ << "]" << std::endl;
+#endif
+
+    auto riter = states.rbegin();
+
+    for(; riter != states.rend(); ++riter)
+    {
+        if(*riter == currentState) // find the start point (currentState)
+            break;
+    }
+
+    if(riter != states.rend()-1) // if not the first state
+        riter += 1;              //   get the next state
+    else                         // if yes
+        riter = states.rbegin(); //   back to the front
+
+    // delay for thread
+    std::this_thread::sleep_for(std::chrono::milliseconds(delayTime));
+    setCurrentState(*riter);
+}
+
 void Multiplexer::nextState()
 {
     #ifdef VERBOSE
@@ -111,6 +135,30 @@ void Multiplexer::nextState()
     else                       // if yes
         iter = states.begin(); //   back to the begin
     
+    setCurrentState(*iter);
+}
+
+void Multiplexer::nextStateWithDelay(uint32_t delayTime)
+{
+#ifdef VERBOSE
+    std::cout << "[" << __func__ << "]" << std::endl;
+#endif
+
+    auto iter = states.begin();
+
+    for(; iter != states.end(); ++iter)
+    {
+        if(*iter == currentState) // find the start point (currentState)
+            break;
+    }
+
+    if(iter != states.end()-1) // if not the last state
+        iter += 1;             //   get the next state
+    else                       // if yes
+        iter = states.begin(); //   back to the begin
+
+    // delay for thread
+    std::this_thread::sleep_for(std::chrono::milliseconds(delayTime));
     setCurrentState(*iter);
 }
 

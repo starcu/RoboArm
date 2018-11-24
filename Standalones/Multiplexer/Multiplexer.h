@@ -91,8 +91,10 @@ public:
     void begin();
     
     void prevState();
-    void nextState(); 
-    
+    void prevStateWithDelay(uint32_t delayTime);
+    void nextState();
+    void nextStateWithDelay(uint32_t delayTime);
+
     void setCurrentState(State& s);
     void setCurrentState(uint8_t _gpio0, uint8_t _gpio1, uint8_t _gpio2);
 

@@ -66,7 +66,7 @@ void Robo::servoWorker() {
         for(auto& w: baseFigurePWMWidths)
         {
             servo.setWidth(w);
-            servoMux.nextState();
+            servoMux.nextStateWithDelay(SERVO_MUX_SWITCHING_INTERVAL_MS);
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(SERVO_MUX_WORKER_POLL_INTERVAL_MS));
@@ -113,6 +113,8 @@ void Robo::mpuWorker()
                 << mpu.getAccelX() << "] AY:[" << mpu.getAccelY() << "] AX:[" << mpu.getAccelZ() << "] GX:["
                 << mpu.getGyroX() << "] GY:[" << mpu.getGyroY() << "] GZ:[" << mpu.getGyroZ() << "]";
             cnt++;
+
+            std::cout << msg.str() << std::endl;
 
             //std::cout << "[ MPU6050 number " + std::to_string(cnt%3) + " ]" << std::endl;
             //std::cout << "\tax=" << std::get<0>(ag).x << "\tay=" << std::get<0>(ag).y << "\taz=" << std::get<0>(ag).z << std::endl;
