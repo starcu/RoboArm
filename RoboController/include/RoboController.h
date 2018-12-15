@@ -33,6 +33,8 @@ public:
 private:
     Robo();
 
+    void initialize();
+
     void serverWorker();
     void servoWorker();
     void mpuWorker();

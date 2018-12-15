@@ -1,9 +1,11 @@
 #include "RoboController.h"
 
-Robo::Robo(): initLock(initMtx),
-              serverThread(&Robo::serverWorker, this),
+Robo::Robo(): initLock(initMtx), // enable init lock
+              serverThread(&Robo::serverWorker, this), // set workers threads workingpoints
               servoMuxThread(&Robo::servoWorker, this),
-              mpuMuxThread(&Robo::mpuWorker, this)
+              mpuMuxThread(&Robo::mpuWorker, this) {}
+
+void Robo::initialize() // initialize robo structures
 {
     servoMux
     .setCtrlPins(SERVO_MUX_S0, SERVO_MUX_S1, SERVO_MUX_S2)
@@ -33,14 +35,25 @@ Robo::Robo(): initLock(initMtx),
         state = RoboState::OK;
     }
 
-    initDoneCV.notify_all();
+    initDoneCV.notify_all(); // notify all workers that strucutres are initialized
 }
 
 void Robo::serverWorker()
 {
-    server.createSocket();
-    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Server (127.0.0.1) worker thread started, server will listen on port 8080");
+    try
+    {
+        server.createSocket();
+    } 
+    catch(...)
+    {
+        serverWorkerOK = false;
+    }
 
+    if(serverWorkerOK)
+        RoboLogger::logger()->severity_log(normal, std::string(__func__), "Server (127.0.0.1) worker thread started, server will listen on port 8080");
+    else
+        RoboLogger::logger()->severity_log(normal, std::string(__func__), "Server initialization failed, exiting worker");
+        
     while(serverWorkerOK)
         server.listenOnSocket();
 
@@ -112,14 +125,14 @@ void Robo::mpuWorker()
             //std::get<2>(ag).y = mpu.getMagnetY();
             //std::get<2>(ag).z = mpu.getMagnetZ();
 
-            static uint64_t cnt = 0;
-            std::stringstream msg;
-            msg << "Last MPU[" << cnt%3 << "] positions were: AX:["
-                << mpu.getAccelX() << "] AY:[" << mpu.getAccelY() << "] AX:[" << mpu.getAccelZ() << "] GX:["
-                << mpu.getGyroX() << "] GY:[" << mpu.getGyroY() << "] GZ:[" << mpu.getGyroZ() << "]";
-            cnt++;
+            //static uint64_t cnt = 0;
+            //std::stringstream msg;
+            //msg << "Last MPU[" << cnt%3 << "] positions were: AX:["
+            //    << mpu.getAccelX() << "] AY:[" << mpu.getAccelY() << "] AX:[" << mpu.getAccelZ() << "] GX:["
+            //    << mpu.getGyroX() << "] GY:[" << mpu.getGyroY() << "] GZ:[" << mpu.getGyroZ() << "]";
+            //cnt++;
 
-            std::cout << msg.str() << std::endl;
+            //std::cout << msg.str() << std::endl;
 
             //std::cout << "[ MPU6050 number " + std::to_string(cnt%3) + " ]" << std::endl;
             //std::cout << "\tax=" << std::get<0>(ag).x << "\tay=" << std::get<0>(ag).y << "\taz=" << std::get<0>(ag).z << std::endl;
