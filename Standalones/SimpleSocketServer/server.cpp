@@ -37,7 +37,7 @@ void SimpleSocketServer::createSocket()
 
 void SimpleSocketServer::listenOnSocket(bool block)
 {
-    while(block)
+    do // with block set to false its possible to use this function in external while loop
     {
         if ((new_socket = accept(server_fd, 
                                 (struct sockaddr*)&address, 
@@ -52,4 +52,5 @@ void SimpleSocketServer::listenOnSocket(bool block)
         send(new_socket, standard_response, strlen(standard_response), 0);
         std::cout << request_buffer << std::endl;
     }
+    while(block)
 }
