@@ -47,7 +47,8 @@ void Robo::serverWorker()
     RoboLogger::logger()->severity_log(normal, std::string(__func__),"SERVER worker done his work");
 }
 
-void Robo::servoWorker() {
+void Robo::servoWorker() 
+{
     RoboLogger::logger()->severity_log(normal, std::string(__func__),
                                        "Servo worker thread waiting for initialization to be done");
     {
@@ -95,17 +96,21 @@ void Robo::mpuWorker()
     while(mpuWorkerOK)
     {
         // first functionality is just to read data from all accels and gyros pairs
-        for(auto& ag: accGyro)
+        for(auto& agm: accGyroMagnet)
         {
             mpu.getMeasurements();
 
-            std::get<0>(ag).x = mpu.getAccelX();
-            std::get<0>(ag).y = mpu.getAccelY();
-            std::get<0>(ag).z = mpu.getAccelZ();
+            std::get<0>(agm).x = mpu.getAccelX();
+            std::get<0>(agm).y = mpu.getAccelY();
+            std::get<0>(agm).z = mpu.getAccelZ();
 
-            std::get<1>(ag).x = mpu.getGyroX();
-            std::get<1>(ag).y = mpu.getGyroY();
-            std::get<1>(ag).z = mpu.getGyroZ();
+            std::get<1>(agm).x = mpu.getGyroX();
+            std::get<1>(agm).y = mpu.getGyroY();
+            std::get<1>(agm).z = mpu.getGyroZ();
+
+            //std::get<2>(ag).x = mpu.getMagnetX();
+            //std::get<2>(ag).y = mpu.getMagnetY();
+            //std::get<2>(ag).z = mpu.getMagnetZ();
 
             static uint64_t cnt = 0;
             std::stringstream msg;

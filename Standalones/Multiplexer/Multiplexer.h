@@ -99,18 +99,7 @@ public:
     void setCurrentState(uint8_t _gpio0, uint8_t _gpio1, uint8_t _gpio2);
 
     template <class F, class OBJ, class ...Args>
-    void performForEveryState(F f, OBJ o, Args ...args)
-    {
-        auto cs = this->getCurrentState();
-        for(auto& s: states)
-        {
-            this->setCurrentState(s);
-            auto fnc = std::bind(f, o, std::forward<Args>(args)...);
-            fnc(args...);
-        }
-
-        this->setCurrentState(cs); // back to the state before loop
-    }
+    void performForEveryState(F f, OBJ o, Args ...args);
 
     const State getCurrentState() const
     {
@@ -122,6 +111,21 @@ private:
     std::vector<State> states;
     State currentState;
 };
+
+template <class F, class OBJ, class ...Args>
+void Multiplexer::performForEveryState(F f, OBJ o, Args ...args)
+{
+    auto cs = this->getCurrentState();
+    auto fnc = std::bind(f, o, std::forward<Args>(args)...);
+
+    for(auto& s: states)
+    {
+        this->setCurrentState(s);
+        fnc(args...);
+    }
+
+    this->setCurrentState(cs); // back to the state before loop
+}
 
 #endif /* MULTIPLEXER_H */
 
