@@ -9,10 +9,11 @@
 #include <string>
 #include <arpa/inet.h>
 #include <iostream>
+#include <exception>
 
 class SimpleSocketServer
 {
-    private:
+private:
     unsigned int port = 8080;
     unsigned int server_fd, new_socket, valread;
     int opt = 1;
@@ -26,7 +27,7 @@ class SimpleSocketServer
 
     void prepareResponse();
 
-    public:
+public:
     SimpleSocketServer(int _port, std::string address): port(_port), address_str(address) {}
     void createSocket();
     void listenOnSocket(bool block=false);

@@ -10,10 +10,11 @@
 #include <unistd.h>
 #include <iostream>
 #include <memory>
+#include <exception>
 
 class SimpleSocketClient
 {
-    private:
+private:
     std::string str_address;
     struct sockaddr_in serv_addr;
     unsigned int port;
@@ -25,7 +26,7 @@ class SimpleSocketClient
 
     void createSocket();
 
-    public:
+public:
     SimpleSocketClient(int _port, std::string address): port(_port), 
                                                         str_address(address) {}
 

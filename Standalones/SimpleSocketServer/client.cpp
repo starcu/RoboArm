@@ -4,7 +4,7 @@ void SimpleSocketClient::createSocket()
 {
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
-        printf("\n Socket creation error \n");
+        throw std::exception("CLIENT_SOCKET_CREATION_FAILED_EXIT_FAILURE");
         //return -1;
     }
   
@@ -16,7 +16,7 @@ void SimpleSocketClient::createSocket()
     // Convert IPv4 and IPv6 addresses from text to binary form
     if(inet_pton(AF_INET, str_address.c_str(), &serv_addr.sin_addr)<=0) 
     {
-        printf("\nInvalid address/ Address not supported \n");
+        throw std::exception("CLIENT_INCORRECT_ADDRESS_EXIT_FAILURE");
         //return -1;
     }
 }
@@ -27,7 +27,7 @@ void SimpleSocketClient::sendRequestToServer()
 
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
-        printf("\nConnection Failed \n");
+       throw std::exception("CLIENT_CONNECTION_FAILED_EXIT_FAILURE");
         //return -1;
     }
     send(sock, standard_request, strlen(standard_request), 0 );
@@ -48,7 +48,7 @@ void SimpleSocketClient::sendRequestToServer(char* req, int size)
 
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
-        printf("\nConnection Failed \n");
+        throw std::exception("CLIENT_CONNECTION_FAILED_EXIT_FAILURE");
         //return -1;
     }
     send(sock , request_buffer , strlen(request_buffer) , 0 );
@@ -66,7 +66,7 @@ void SimpleSocketClient::sendRequestToServer(std::string& req)
 
     if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
     {
-        printf("\nConnection Failed \n");
+        throw std::exception("CLIENT_CONNECTION_FAILED_EXIT_FAILURE");
         //return -1;
     }
     send(sock, request_buffer, strlen(request_buffer), 0);

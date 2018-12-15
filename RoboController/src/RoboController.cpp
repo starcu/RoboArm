@@ -52,10 +52,19 @@ void Robo::serverWorker()
     if(serverWorkerOK)
         RoboLogger::logger()->severity_log(normal, std::string(__func__), "Server (127.0.0.1) worker thread started, server will listen on port 8080");
     else
-        RoboLogger::logger()->severity_log(normal, std::string(__func__), "Server initialization failed, exiting worker");
+        RoboLogger::logger()->severity_log(error, std::string(__func__), "Server initialization failed, exiting worker");
         
-    while(serverWorkerOK)
-        server.listenOnSocket();
+    //while(serverWorkerOK)
+    //{
+    try
+    {
+        server.listenOnSocket(serverWorkerOK);
+    } 
+    catch(...)
+    {
+        RoboLogger::logger()->severity_log(warning, std::string(__func__), "Server exception thrown during listening");
+    }
+    // 
 
     RoboLogger::logger()->severity_log(normal, std::string(__func__),"SERVER worker done his work");
 }
