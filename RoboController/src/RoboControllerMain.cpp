@@ -5,7 +5,7 @@ int main(int argc, char const *argv[])
 {
 	auto robo = Robo::get();
 	
-	robo->initialize();
+//	robo->initialize();
 
 	while(robo->getCurrentState() == RoboState::OK)
 	{

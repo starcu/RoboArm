@@ -1,14 +1,10 @@
 #include "RoboController.h"
 
-Robo::Robo(): initLock(initMtx, std::defer_lock), // enable init lock
-              serverThread(&Robo::serverWorker, this), // set workers threads workingpoints
+Robo::Robo(): initLock(initMtx),
+              serverThread(&Robo::serverWorker, this),
               servoMuxThread(&Robo::servoWorker, this),
-              mpuMuxThread(&Robo::mpuWorker, this) {}
-
-void Robo::initialize() // initialize robo structures
+              mpuMuxThread(&Robo::mpuWorker, this)
 {
-    initMtx.lock();
-
     servoMux
     .setCtrlPins(SERVO_MUX_S0, SERVO_MUX_S1, SERVO_MUX_S2)
     ->addStateToQueue(LOW,LOW,LOW)    // M1Y0
@@ -37,7 +33,7 @@ void Robo::initialize() // initialize robo structures
         state = RoboState::OK;
     }
 
-    initDoneCV.notify_all(); // notify all workers that strucutres are initialized
+    initDoneCV.notify_all();
 }
 
 void Robo::serverWorker()
@@ -45,10 +41,10 @@ void Robo::serverWorker()
     try
     {
         server.createSocket();
-    } 
+    }
     catch(...)
     {
-        serverWorkerOK = false;
+       serverWorkerOK = false;
     }
 
     if(serverWorkerOK)
@@ -71,8 +67,7 @@ void Robo::serverWorker()
     RoboLogger::logger()->severity_log(normal, std::string(__func__),"SERVER worker done his work");
 }
 
-void Robo::servoWorker() 
-{
+void Robo::servoWorker() {
     RoboLogger::logger()->severity_log(normal, std::string(__func__),
                                        "Servo worker thread waiting for initialization to be done");
     {
@@ -102,9 +97,8 @@ void Robo::servoWorker()
 
 void Robo::mpuWorker()
 {
-    RoboLogger::logger()->severity_log(normal, std::string(__func__),
-            "MPU worker thread waiting for initialization to be done");
-
+    RoboLogger::logger()->severity_log(normal, std::string(__func__), "MPU worker thread waiting for initialization to be done");
+    
     {
         std::unique_lock<std::mutex> lk(initMtx);
         initDoneCV.wait(lk, [this] {
@@ -119,7 +113,7 @@ void Robo::mpuWorker()
 
     while(mpuWorkerOK)
     {
-        // first functionality is just to read data from all accels and gyros pairs
+        // first functionality is just to read data from all accels, gyros and magnets
         for(auto& agm: accGyroMagnet)
         {
             mpu.getMeasurements();
@@ -151,6 +145,7 @@ void Robo::mpuWorker()
 
             mpuMux.nextState();
         }
+
 
         std::this_thread::sleep_for(std::chrono::milliseconds(MPU_MUX_WORKER_POLL_INTERVAL_MS));
     }
