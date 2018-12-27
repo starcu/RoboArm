@@ -12,6 +12,8 @@ class Robo
 public:
     Robo(const Robo& r) = delete;
 
+    void initialize();
+
     static Robo* get()
     {
         static std::unique_ptr<Robo> r(new Robo());
@@ -33,7 +35,7 @@ public:
 private:
     Robo();
 
-    void initialize();
+   // void initialize();
 
     void serverWorker();
     void servoWorker();

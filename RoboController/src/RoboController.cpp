@@ -1,12 +1,14 @@
 #include "RoboController.h"
 
-Robo::Robo(): initLock(initMtx), // enable init lock
+Robo::Robo(): initLock(initMtx, std::defer_lock), // enable init lock
               serverThread(&Robo::serverWorker, this), // set workers threads workingpoints
               servoMuxThread(&Robo::servoWorker, this),
               mpuMuxThread(&Robo::mpuWorker, this) {}
 
 void Robo::initialize() // initialize robo structures
 {
+    initMtx.lock();
+
     servoMux
     .setCtrlPins(SERVO_MUX_S0, SERVO_MUX_S1, SERVO_MUX_S2)
     ->addStateToQueue(LOW,LOW,LOW)    // M1Y0
