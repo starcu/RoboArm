@@ -4,9 +4,6 @@
 int main(int argc, char const *argv[])
 {
 	auto robo = Robo::get();
-	
-//	robo->initialize();
-
 	while(robo->getCurrentState() == RoboState::OK)
 	{
 		RoboLogger::logger()->timed_log(normal, 30000, "RoboWorker status: " + RoboStateToString(robo->getCurrentState()));

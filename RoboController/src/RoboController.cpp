@@ -38,31 +38,11 @@ Robo::Robo(): initLock(initMtx),
 
 void Robo::serverWorker()
 {
-    try
-    {
-        server.createSocket();
-    }
-    catch(...)
-    {
-       serverWorkerOK = false;
-    }
+    server.createSocket();
+    RoboLogger::logger()->severity_log(normal, std::string(__func__), "Server (127.0.0.1) worker thread started, server will listen on port 8080");
 
-    if(serverWorkerOK)
-        RoboLogger::logger()->severity_log(normal, std::string(__func__), "Server (127.0.0.1) worker thread started, server will listen on port 8080");
-    else
-        RoboLogger::logger()->severity_log(error, std::string(__func__), "Server initialization failed, exiting worker");
-        
-    //while(serverWorkerOK)
-    //{
-    try
-    {
-        server.listenOnSocket(serverWorkerOK);
-    } 
-    catch(...)
-    {
-        RoboLogger::logger()->severity_log(warning, std::string(__func__), "Server exception thrown during listening");
-    }
-    // 
+    while(serverWorkerOK)
+        server.listenOnSocket();
 
     RoboLogger::logger()->severity_log(normal, std::string(__func__),"SERVER worker done his work");
 }
@@ -85,6 +65,7 @@ void Robo::servoWorker() {
         // first functionality is set arm to base figure 90, 90, 135, 45, 90, 60
         for(auto& w: baseFigurePWMWidths)
         {
+           // std::cout << w << std::endl;
             servo.setWidth(w);
             servoMux.nextStateWithDelay(SERVO_MUX_SWITCHING_INTERVAL_MS);
         }
@@ -97,8 +78,9 @@ void Robo::servoWorker() {
 
 void Robo::mpuWorker()
 {
-    RoboLogger::logger()->severity_log(normal, std::string(__func__), "MPU worker thread waiting for initialization to be done");
-    
+    RoboLogger::logger()->severity_log(normal, std::string(__func__),
+            "MPU worker thread waiting for initialization to be done");
+
     {
         std::unique_lock<std::mutex> lk(initMtx);
         initDoneCV.wait(lk, [this] {
@@ -113,29 +95,25 @@ void Robo::mpuWorker()
 
     while(mpuWorkerOK)
     {
-        // first functionality is just to read data from all accels, gyros and magnets
-        for(auto& agm: accGyroMagnet)
+        // first functionality is just to read data from all accels and gyros pairs
+        for(auto& ag: accGyro)
         {
             mpu.getMeasurements();
 
-            std::get<0>(agm).x = mpu.getAccelX();
-            std::get<0>(agm).y = mpu.getAccelY();
-            std::get<0>(agm).z = mpu.getAccelZ();
+            std::get<0>(ag).x = mpu.getAccelX();
+            std::get<0>(ag).y = mpu.getAccelY();
+            std::get<0>(ag).z = mpu.getAccelZ();
 
-            std::get<1>(agm).x = mpu.getGyroX();
-            std::get<1>(agm).y = mpu.getGyroY();
-            std::get<1>(agm).z = mpu.getGyroZ();
+            std::get<1>(ag).x = mpu.getGyroX();
+            std::get<1>(ag).y = mpu.getGyroY();
+            std::get<1>(ag).z = mpu.getGyroZ();
 
-            //std::get<2>(ag).x = mpu.getMagnetX();
-            //std::get<2>(ag).y = mpu.getMagnetY();
-            //std::get<2>(ag).z = mpu.getMagnetZ();
-
-            //static uint64_t cnt = 0;
-            //std::stringstream msg;
-            //msg << "Last MPU[" << cnt%3 << "] positions were: AX:["
-            //    << mpu.getAccelX() << "] AY:[" << mpu.getAccelY() << "] AX:[" << mpu.getAccelZ() << "] GX:["
-            //    << mpu.getGyroX() << "] GY:[" << mpu.getGyroY() << "] GZ:[" << mpu.getGyroZ() << "]";
-            //cnt++;
+            static uint64_t cnt = 0;
+            std::stringstream msg;
+            msg << "Last MPU[" << cnt%3 << "] positions were: AX:["
+                << mpu.getAccelX() << "] AY:[" << mpu.getAccelY() << "] AX:[" << mpu.getAccelZ() << "] GX:["
+                << mpu.getGyroX() << "] GY:[" << mpu.getGyroY() << "] GZ:[" << mpu.getGyroZ() << "]";
+            cnt++;
 
             //std::cout << msg.str() << std::endl;
 
@@ -145,7 +123,6 @@ void Robo::mpuWorker()
 
             mpuMux.nextState();
         }
-
 
         std::this_thread::sleep_for(std::chrono::milliseconds(MPU_MUX_WORKER_POLL_INTERVAL_MS));
     }
