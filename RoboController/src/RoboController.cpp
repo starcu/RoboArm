@@ -65,6 +65,7 @@ void Robo::servoWorker() {
         // first functionality is set arm to base figure 90, 90, 135, 45, 90, 60
         for(auto& w: baseFigurePWMWidths)
         {
+           // std::cout << w << std::endl;
             servo.setWidth(w);
             servoMux.nextStateWithDelay(SERVO_MUX_SWITCHING_INTERVAL_MS);
         }
@@ -114,7 +115,7 @@ void Robo::mpuWorker()
                 << mpu.getGyroX() << "] GY:[" << mpu.getGyroY() << "] GZ:[" << mpu.getGyroZ() << "]";
             cnt++;
 
-            std::cout << msg.str() << std::endl;
+            //std::cout << msg.str() << std::endl;
 
             //std::cout << "[ MPU6050 number " + std::to_string(cnt%3) + " ]" << std::endl;
             //std::cout << "\tax=" << std::get<0>(ag).x << "\tay=" << std::get<0>(ag).y << "\taz=" << std::get<0>(ag).z << std::endl;

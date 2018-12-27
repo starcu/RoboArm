@@ -85,7 +85,7 @@ void Multiplexer::prevState()
     }
         
     if(riter != states.rend()-1) // if not the first state
-        riter += 1;              //   get the next state
+        riter++;                 //   get the next state
     else                         // if yes
         riter = states.rbegin(); //   back to the front
     
@@ -94,9 +94,9 @@ void Multiplexer::prevState()
 
 void Multiplexer::prevStateWithDelay(uint32_t delayTime)
 {
-#ifdef VERBOSE
+    #ifdef VERBOSE
     std::cout << "[" << __func__ << "]" << std::endl;
-#endif
+    #endif
 
     auto riter = states.rbegin();
 
@@ -107,7 +107,7 @@ void Multiplexer::prevStateWithDelay(uint32_t delayTime)
     }
 
     if(riter != states.rend()-1) // if not the first state
-        riter += 1;              //   get the next state
+        riter++;                 //   get the next state
     else                         // if yes
         riter = states.rbegin(); //   back to the front
 
@@ -131,7 +131,7 @@ void Multiplexer::nextState()
     }
     
     if(iter != states.end()-1) // if not the last state
-        iter += 1;             //   get the next state
+        iter++;                //   get the next state
     else                       // if yes
         iter = states.begin(); //   back to the begin
     
@@ -140,9 +140,9 @@ void Multiplexer::nextState()
 
 void Multiplexer::nextStateWithDelay(uint32_t delayTime)
 {
-#ifdef VERBOSE
+    #ifdef VERBOSE
     std::cout << "[" << __func__ << "]" << std::endl;
-#endif
+    #endif
 
     auto iter = states.begin();
 
@@ -153,7 +153,7 @@ void Multiplexer::nextStateWithDelay(uint32_t delayTime)
     }
 
     if(iter != states.end()-1) // if not the last state
-        iter += 1;             //   get the next state
+        iter++;             //   get the next state
     else                       // if yes
         iter = states.begin(); //   back to the begin
 
