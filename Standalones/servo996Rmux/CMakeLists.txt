@@ -12,7 +12,7 @@ include_directories(
 #set(target_src)
 #set(target_headers)
 
-file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin) # dir for executables
+#file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin) # dir for executables
 #file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib) # dir for libraries
 
 add_executable(servo main.cpp)
@@ -23,6 +23,5 @@ find_library(SERVO_LIB servo HINTS /home/pi/RoboArm/Standalones/ServoCtrl/${CMAK
 target_link_libraries(servo PUBLIC ${MUX_LIB} ${SERVO_LIB} bcm2835 wiringPi pthread m)
 
 #set(CMAKE_BUILD_DIRECTORY ../build)
-
-set(EXECUTABLE_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/bin)
+#set(EXECUTABLE_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/bin)
 #set(LIBRARY_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/lib)

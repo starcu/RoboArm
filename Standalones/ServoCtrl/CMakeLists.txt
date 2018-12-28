@@ -11,8 +11,8 @@ include_directories(
 		${PROJECT_SOURCE_DIR}/
 		)
 
-file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin) # dir for executables
-file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib) # dir for libraries
+#file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin) # dir for executables
+#file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib) # dir for libraries
 
 find_package(Boost REQUIRED)
 
@@ -23,7 +23,6 @@ target_link_libraries(servo bcm2835 wiringPi m pthread)
 target_link_libraries(servo_exe servo)
 
 #set(CMAKE_BUILD_DIRECTORY ../build)
-
-set(EXECUTABLE_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/bin)
-set(LIBRARY_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/lib)
+#set(EXECUTABLE_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/bin)
+#set(LIBRARY_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/lib)
 

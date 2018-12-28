@@ -26,5 +26,4 @@ include_directories(${PROJECT_SOURCE_DIR}/src
 target_link_libraries(robo mpu6050 multiplexer servo simplesocket boost_system boost_thread boost_log boost_log_setup bcm2835 wiringPi m pthread)
 
 #set(CMAKE_BUILD_DIRECTORY ../build)
-
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/)

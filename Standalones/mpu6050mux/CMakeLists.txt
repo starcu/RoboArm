@@ -9,7 +9,7 @@ include_directories(
 		${PROJECT_SOURCE_DIR}/
 		)
 
-file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin) # dir for executables
+#file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin) # dir for executables
 #file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib) # dir for libraries
 
 add_executable(mpu main.cpp)
@@ -24,6 +24,5 @@ find_library(MPU6050_LIB mpu6050 HINTS /home/pi/RoboArm/Standalones/MPU6050/${CM
 target_link_libraries(mpu ${MPU6050_LIB} ${MUX_LIB} bcm2835 wiringPi pthread m)
 
 #set(CMAKE_BUILD_DIRECTORY ../build)
-
-set(EXECUTABLE_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/bin)
+#set(EXECUTABLE_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/bin)
 #set(LIBRARY_OUTPUT_PATH ../${CMAKE_BUILD_TYPE}/lib)
