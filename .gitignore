@@ -87,10 +87,11 @@ build/
 SimpleSocketServer/.vscode
 RoboUI/js_backend
 .idea
-cmake-build-debug-remoterpi
-cmake-build-release-remoterpi
-cmake-build-debug
+cmake-build-debug-remotepi
+cmake-build-release-remotepi
+cmake-build-*
 cmake-build-release
+cmake-build-debug
 Debug
 Release
 *.marker
