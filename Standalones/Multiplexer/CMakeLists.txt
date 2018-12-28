@@ -16,9 +16,9 @@ file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib) # dir for lib
 
 find_package(Boost REQUIRED)
 
+add_library(multiplexer Multiplexer.cpp Multiplexer.h)
 add_executable(mux main.cpp)
 add_executable(test_mux mux_tests.cpp)
-add_library(multiplexer Multiplexer.cpp Multiplexer.h)
 
 target_link_libraries(multiplexer bcm2835 wiringPi m pthread)
 target_link_libraries(mux bcm2835 wiringPi m pthread multiplexer)

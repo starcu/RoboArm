@@ -12,6 +12,10 @@ file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/) # dir for executab
 
 add_executable(robo src/RoboControllerMain.cpp src/RoboController.cpp src/RoboLogger.cpp)
 
+include_directories( ${mpu6050_INCLUDE_DIRECTORIES} )
+include_directories( ${multiplexer_INCLUDE_DIRECTORIES} )
+include_directories( ${servo_INCLUDE_DIRECTORIES} )
+include_directories( ${simplesocket_INCLUDE_DIRECTORIES} )
 include_directories(${PROJECT_SOURCE_DIR}/src
 		${PROJECT_SOURCE_DIR}/include
 		/home/pi/RoboArm/Standalones/Multiplexer/
@@ -19,11 +23,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src
 		/home/pi/RoboArm/Standalones/MPU6050/
 		/home/pi/RoboArm/Standalones/SimpleSocketServer/)
 
-find_library(MUX_LIB multiplexer HINTS /home/pi/RoboArm/Standalones/Multiplexer/${CMAKE_BUILD_TYPE}/lib/)
-find_library(MPU6050_LIB mpu6050 HINTS /home/pi/RoboArm/Standalones/MPU6050/${CMAKE_BUILD_TYPE}/lib/)
-find_library(SERVO_LIB servo HINTS /home/pi/RoboArm/Standalones/ServoCtrl/${CMAKE_BUILD_TYPE}/lib/)
-find_library(SOCKET_LIB simplesocket HINTS /home/pi/RoboArm/Standalones/SimpleSocketServer/${CMAKE_BUILD_TYPE}/lib/)
-target_link_libraries(robo ${SOCKET_LIB} ${MUX_LIB} ${SERVO_LIB} ${MPU6050_LIB} boost_system boost_thread boost_log boost_log_setup bcm2835 wiringPi m pthread)
+target_link_libraries(robo mpu6050 multiplexer servo simplesocket boost_system boost_thread boost_log boost_log_setup bcm2835 wiringPi m pthread)
 
 #set(CMAKE_BUILD_DIRECTORY ../build)
 
