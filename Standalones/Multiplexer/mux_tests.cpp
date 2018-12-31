@@ -148,3 +148,66 @@ BOOST_AUTO_TEST_CASE( check_mixed_moves )
         testMux.prevState();
     }
 }
+
+BOOST_AUTO_TEST_CASE( multiple_buses_test )
+{
+    enum BUSES
+    {
+        BUS_0,
+        BUS_1,
+        BUS_2
+    };
+
+    Multiplexer testMux;
+
+    testMux
+    .setCtrlPins(17,27,22)
+    ->addStateToQueue(LOW, LOW, LOW, BUSES::BUS_0)
+    ->addStateToQueue(HIGH, LOW, LOW, BUSES::BUS_0)
+    ->addStateToQueue(LOW, HIGH, LOW, BUSES::BUS_1)
+    ->addStateToQueue(LOW, LOW, HIGH, BUSES::BUS_1)
+    ->addStateToQueue(LOW, HIGH, HIGH, BUSES::BUS_2)
+    ->addStateToQueue(HIGH, LOW, HIGH, BUSES::BUS_2)
+    ->begin();
+
+    State tstate {LOW,LOW,LOW,BUSES::BUS_0};
+    State currState = testMux.getCurrentState();
+    BOOST_CHECK_EQUAL(tstate,currState); //check if first state is correct
+    BOOST_CHECK_EQUAL(tstate.getStateBus(), BUSES::BUS_0); //check first state bus
+
+    testMux.nextState();
+    currState = testMux.getCurrentState();
+    State tstate2 {HIGH, LOW, LOW,BUSES::BUS_0};
+    BOOST_CHECK_EQUAL(tstate2,currState); // check second state
+    BOOST_CHECK_EQUAL(tstate2.getStateBus(), BUSES::BUS_0); // check second state bus
+
+    testMux.nextState();
+    currState = testMux.getCurrentState();
+    State tstate3 {LOW, HIGH, LOW,BUSES::BUS_1};
+    BOOST_CHECK_EQUAL(tstate3,currState); // check third state
+    BOOST_CHECK_EQUAL(tstate3.getStateBus(), BUSES::BUS_1); // check third state bus
+
+    testMux.nextState();
+    currState = testMux.getCurrentState();
+    State tstate4 {LOW, LOW, HIGH,BUSES::BUS_1};
+    BOOST_CHECK_EQUAL(tstate4,currState); // check fourth state
+    BOOST_CHECK_EQUAL(tstate4.getStateBus(), BUSES::BUS_1); // check fourth state bus
+
+    testMux.nextState();
+    currState = testMux.getCurrentState();
+    State tstate5 {LOW, HIGH, HIGH,BUSES::BUS_2};
+    BOOST_CHECK_EQUAL(tstate5,currState); // check fifth state
+    BOOST_CHECK_EQUAL(tstate5.getStateBus(), BUSES::BUS_2); // check fifth state bus
+
+    testMux.nextState();
+    currState = testMux.getCurrentState();
+    State tstate6 {HIGH, LOW, HIGH,BUSES::BUS_2};
+    BOOST_CHECK_EQUAL(tstate6,currState); // check sixth state
+    BOOST_CHECK_EQUAL(tstate6.getStateBus(), BUSES::BUS_2); // check sixth state bus
+
+    testMux.nextState();
+    currState = testMux.getCurrentState();
+    State tstate1_bis {LOW,LOW,LOW,BUSES::BUS_0};
+    BOOST_CHECK_EQUAL(tstate1_bis,currState); //check if first state is correct
+    BOOST_CHECK_EQUAL(tstate1_bis.getStateBus(), BUSES::BUS_0); //check first state bus after mux overflow
+}

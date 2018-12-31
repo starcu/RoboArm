@@ -16,8 +16,6 @@
 #include "RoboLogger.h"
 #include "RoboControllerCommon.h"
 
-using namespace RoboI2CBuses;
-
 class Robo
 {
 public:

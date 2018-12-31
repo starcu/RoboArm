@@ -5,12 +5,12 @@ Robo::Robo(): initLock(initMtx),
               i2cMuxThread(&Robo::i2cWorker, this)
 {
     i2cMux
-    .setCtrlPins(I2C_MUX_S0, I2C_MUX_S1, I2C_MUX_S2)
-    ->addStateToQueue(LOW,LOW,LOW,MPU_I2C_BUS)    // M1Y0 // mpu0
-    ->addStateToQueue(HIGH,LOW,LOW,MPU_I2C_BUS)   // M1Y1 // mpu1
-    ->addStateToQueue(LOW,HIGH,LOW,MPU_I2C_BUS)   // M1Y2 // mpu2
-    ->addStateToQueue(HIGH,HIGH,LOW,MPU_I2C_BUS)  // M1Y3 // mpu3
-    ->addStateToQueue(LOW,LOW,HIGH,PCA9685_I2C_BUS)   // M1Y4 // pca9685
+    .setCtrlPins(I2C_MUX_S0, I2C_MUX_S1,I2C_BUS::MPU6050)
+    ->addStateToQueue(LOW,LOW,LOW,I2C_BUS::MPU6050)    // M1Y0 // mpu0
+    ->addStateToQueue(HIGH,LOW,LOW,I2C_BUS::MPU6050)   // M1Y1 // mpu1
+    ->addStateToQueue(LOW,HIGH,LOW,I2C_BUS::MPU6050)   // M1Y2 // mpu2
+    ->addStateToQueue(HIGH,HIGH,LOW,I2C_BUS::MPU6050)  // M1Y3 // mpu3
+    ->addStateToQueue(LOW,LOW,HIGH,I2C_BUS::PCA9685)   // M1Y4 // pca9685
     ->begin();
     RoboLogger::logger()->severity_log(normal, FUNCTION_NAME, "I2C multiplexer initialized");
 
@@ -164,7 +164,7 @@ void Robo::i2cWorker()
     RoboLogger::logger()->severity_log(normal, FUNCTION_NAME, "Robot init done, I2C worker thread started");
     RoboLogger::logger()->severity_log(normal, FUNCTION_NAME, "Initializing all sensors");
 
-    i2cMux.performForEveryStateInBus(MPU_I2C_BUS, &MPU::initialize, mpu); // initialize all MPU6050 sensors
+    i2cMux.performForEveryStateInBus(I2C_BUS::MPU6050, &MPU::initialize, mpu); // initialize all MPU6050 sensors
 
     while(i2cWorkerOK)
     {
@@ -177,7 +177,7 @@ void Robo::i2cWorker()
 
         switch(state.getStateBus()) // check of witch bus this state is placed
         {
-            case (MPU_I2C_BUS):
+            case (I2C_BUS::MPU6050):
             {
                 std::cout << "MPU_I2C_BUS" << std::endl;
                 mpu.getMeasurements();
@@ -192,7 +192,7 @@ void Robo::i2cWorker()
                 break;
             }
 
-            case (PCA9685_I2C_BUS):
+            case (I2C_BUS::PCA9685):
             {
                 std::cout << "PCA9685_I2C_BUS" << std::endl;
                 uint64_t pcnt = 0;

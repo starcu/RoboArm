@@ -24,6 +24,8 @@
 #include <sstream>
 #include <mutex>
 
+#define code_line std::to_string(__LINE__)
+
 namespace logging = boost::log;
 namespace expr = boost::log::expressions;
 namespace attrs = boost::log::attributes;

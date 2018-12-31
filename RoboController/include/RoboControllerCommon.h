@@ -50,13 +50,13 @@
 
 */
 
-namespace RoboI2CBuses
+enum I2C_BUS
 {
-    #define MPU_I2C_BUS 0
-    #define PCA9685_I2C_BUS 1
-}
+    MPU6050,
+    PCA9685
+};
 
-enum class RoboState
+enum RoboState
 {
     UNINITIALIZED,
     OK,
