@@ -11,7 +11,7 @@
 #include <condition_variable>
 #include "server.h"
 #include "Multiplexer.h"
-//#include "Servo.h" // deprecated -> change to PCA9685
+//#include "Servo.h" // deprecated -> replaced with PCA9685
 #include "MPU6050Class.h"
 #include "RoboLogger.h"
 #include "RoboControllerCommon.h"
@@ -38,8 +38,6 @@ public:
     {
         serverThread.join();
         i2cMuxThread.join();
-        //servoMuxThread.join();
-        //mpuMuxThread.join();
     }
 
 private:
@@ -56,22 +54,14 @@ private:
     MPU         mpu;
     //Servo       servo{SERVO_PIN}; // deprecated -> changed to PCA9685
 
-    //Multiplexer servoMux; // no mux necessary fot PCA9685
-    //Multiplexer mpuMux;
     Multiplexer i2cMux;
 
-    //std::thread servoMuxThread; // no longer used
-    //std::thread mpuMuxThread; // no longer used -> common i2c worker is now used
     std::thread serverThread;
     std::thread i2cMuxThread;
 
-    //std::atomic_bool servoWorkerOK{true};
-    //std::atomic_bool mpuWorkerOK{true};
     std::atomic_bool serverWorkerOK{true};
     std::atomic_bool i2cWorkerOK{true};
 
-    //void servoWorker();
-    //void mpuWorker();
     void serverWorker();
     void i2cWorker();
 

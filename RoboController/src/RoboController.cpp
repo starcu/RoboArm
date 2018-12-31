@@ -2,33 +2,8 @@
 
 Robo::Robo(): initLock(initMtx),
               serverThread(&Robo::serverWorker, this),
-              //servoMuxThread(&Robo::servoWorker, this),
               i2cMuxThread(&Robo::i2cWorker, this)
-              //mpuMuxThread(&Robo::mpuWorker, this)
 {
-    /*
-    // no mux necessary for PCA9685
-    servoMux
-    .setCtrlPins(SERVO_MUX_S0, SERVO_MUX_S1, SERVO_MUX_S2)
-    ->addStateToQueue(LOW,LOW,LOW)    // M1Y0
-    ->addStateToQueue(HIGH,LOW,LOW)   // M1Y1
-    ->addStateToQueue(LOW,HIGH,LOW)   // M1Y2
-    ->addStateToQueue(HIGH,HIGH,LOW)  // M1Y3
-    ->addStateToQueue(LOW,LOW,HIGH)   // M1Y4
-    ->addStateToQueue(HIGH,LOW,HIGH)  // M1Y5
-    ->begin();
-    RoboLogger::logger()->severity_log(normal, FUNCTION_NAME, "Servo multiplexer initialized");
-
-    // replaced by i2c mux common for all devices
-    mpuMux
-    .setCtrlPins(MPU_MUX_S0, MPU_MUX_S1, MPU_MUX_S2)
-    ->addStateToQueue(LOW,LOW,LOW)   // M0Y0
-    ->addStateToQueue(HIGH,LOW,LOW)  // M0Y1
-    ->addStateToQueue(LOW,HIGH,LOW)  // M0Y2
-    ->begin();
-    RoboLogger::logger()->severity_log(normal, FUNCTION_NAME, "MPU multiplexer initialized");
-    */
-
     i2cMux
     .setCtrlPins(I2C_MUX_S0, I2C_MUX_S1, I2C_MUX_S2)
     ->addStateToQueue(LOW,LOW,LOW,MPU_I2C_BUS)    // M1Y0 // mpu0
