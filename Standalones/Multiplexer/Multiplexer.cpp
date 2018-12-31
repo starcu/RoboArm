@@ -42,22 +42,24 @@ Multiplexer* Multiplexer::setCtrlPins(uint8_t _gpio0, uint8_t _gpio1, uint8_t _g
     return this;
 }
 
-Multiplexer* Multiplexer::addStateToQueue(uint8_t s0, uint8_t s1, uint8_t s2)
+Multiplexer* Multiplexer::addStateToQueue(uint8_t s0, uint8_t s1, uint8_t s2, uint8_t bus)
 {
     #ifdef VERBOSE
     std::cout << "[" << __func__ << "]" << std::endl;
     #endif
 
     states.emplace_back(s0, s1, s2);
+    states.back().setStateBus(bus);
     return this;
 }
 
-Multiplexer* Multiplexer::addStateToQueue(State& s)
+Multiplexer* Multiplexer::addStateToQueue(State& s, uint8_t bus)
 {
-#ifdef VERBOSE
+    #ifdef VERBOSE
     std::cout << "[" << __func__ << "]" << std::endl;
-#endif
+    #endif
 
+    s.setStateBus(bus);
     states.emplace_back(s);
     return this;
 }
@@ -67,6 +69,7 @@ void Multiplexer::begin()
     #ifdef VERBOSE
     std::cout << "[" << __func__ << "] MUX start working..." << std::endl;
     #endif
+
     this->setCurrentState(states.front()); // first state from vector
 }
 

@@ -2,10 +2,6 @@ cmake_minimum_required (VERSION 3.0)
 
 project(SimpleSocketServer)
 
-
-set(CMAKE_CXX_FLAGS_DEBUG "-std=c++0x -DDEBUG=1 -Wall -g -O3")
-set(CMAKE_CXX_FLAGS_RELEASE "-std=c++0x -Wall -g -O3")
-
 #file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin) # dir for executables
 #file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib) # dir for libraries
 

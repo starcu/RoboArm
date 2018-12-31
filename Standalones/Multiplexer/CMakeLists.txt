@@ -2,9 +2,6 @@ cmake_minimum_required (VERSION 3.0)
 
 project(Multiplexer)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-std=c++0x -DDEBUG=1 -Wall -g -O3")
-set(CMAKE_CXX_FLAGS_RELEASE "-std=c++0x -Wall -g -O3")
-
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK) 
 
 include_directories(

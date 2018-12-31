@@ -2,9 +2,6 @@ cmake_minimum_required (VERSION 3.0)
 
 project(servo996mux)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-std=c++0x -DDEBUG=1 -Wall -O3 -g")
-set(CMAKE_CXX_FLAGS_RELEASE "-std=c++0x -Wall -O3 -g")
-
 include_directories(
 		${PROJECT_SOURCE_DIR}/
 		)

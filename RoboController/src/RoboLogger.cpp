@@ -39,7 +39,7 @@ void RoboLogger::severity_log(log_severity_level sl, std::string msg)
 void RoboLogger::severity_log(log_severity_level sl, std::string fnc_name, std::string msg)
 {
     std::unique_lock<std::mutex> lk(logMtx);
-    BOOST_LOG_SEV(lg, sl) << "[" + fnc_name + "] " << msg;
+    BOOST_LOG_SEV(lg, sl) << "[" + fnc_name + "][Line:"+std::to_string(__LINE__)+"] " << msg;
 }
 
 void RoboLogger::timed_log(log_severity_level sl, uint32_t interval_ms, std::string msg)
@@ -63,7 +63,7 @@ void RoboLogger::timed_log(log_severity_level sl, uint32_t interval_ms, std::str
     if(diff.count() > double(interval_ms)/1000)
     {
         std::unique_lock<std::mutex> lk(logMtx);
-        BOOST_LOG_SEV(lg, sl) << "[" + fnc_name + "] " << msg;
+        BOOST_LOG_SEV(lg, sl) << "[" + fnc_name + "][Line:"+std::to_string(__LINE__)+"] " << msg;
         start = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
     }
 }

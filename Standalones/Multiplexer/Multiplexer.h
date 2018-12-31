@@ -41,28 +41,38 @@
 
 struct State
 {
-    State(uint8_t _s0, uint8_t _s1, uint8_t _s2) : s0(_s0), s1(_s1), s2(_s2) {}
+    State(uint8_t _s0, uint8_t _s1, uint8_t _s2, uint8_t _bus=0) : s0(_s0), s1(_s1), s2(_s2), bus(_bus)  {}
     uint8_t s0;
     uint8_t s1;
     uint8_t s2;
+    uint8_t bus;
+
+    void setStateBus(uint8_t bus)
+    {
+        this->bus = bus;
+    }
+
+    uint8_t getStateBus() const
+    {
+       return bus;
+    }
     
-    bool operator==(const State& in) const{
-        if(this->s0 == in.s0 && this->s1 == in.s1 && this->s2 == in.s2)
+    bool operator==(const State& in) const {
+        if(this->s0 == in.s0 && this->s1 == in.s1 && this->s2 == in.s2 && this->bus == in.bus)
             return true;
         return false;
     }
-    
+
     bool operator!=(const State& in) const {
-        if (this->s0 == in.s0 && this->s1 == in.s1 && this->s2 == in.s2)
-            return false;
-        return true;
+        return !(*this == in);
     }
     
-    explicit operator std::string() const{
+    explicit operator std::string() const {
         return std::string( "{ "
                + std::to_string(s0) + " " 
                + std::to_string(s1) + " " 
-               + std::to_string(s2) + " }");
+               + std::to_string(s2) + " "
+               + std::to_string(bus) + " }");
     }
 
     friend std::ostream& operator<< (std::ostream &out, const State &s);
@@ -87,9 +97,9 @@ public:
     }
     
     Multiplexer* setCtrlPins(uint8_t _gpio0, uint8_t _gpio1, uint8_t _gpio2);
-    Multiplexer* addStateToQueue(uint8_t s0, uint8_t s1, uint8_t s2);
-    Multiplexer* addStateToQueue(State& s);
-    
+    Multiplexer* addStateToQueue(uint8_t s0, uint8_t s1, uint8_t s2, uint8_t bus=0);
+    Multiplexer* addStateToQueue(State& s, uint8_t bus=0);
+
     void begin();
     
     void prevState();
@@ -102,6 +112,9 @@ public:
 
     template <class F, class OBJ, class ...Args>
     void performForEveryState(F f, OBJ o, Args ...args);
+
+    template <class F, class OBJ, class ...Args>
+    void performForEveryStateInBus(uint8_t bus, F f, OBJ o, Args ...args);
 
     const State getCurrentState() const
     {
@@ -124,6 +137,24 @@ void Multiplexer::performForEveryState(F f, OBJ o, Args ...args)
     {
         this->setCurrentState(s);
         fnc(args...);
+    }
+
+    this->setCurrentState(cs); // back to the state before loop
+}
+
+template <class F, class OBJ, class ...Args>
+void Multiplexer::performForEveryStateInBus(uint8_t bus, F f, OBJ o, Args ...args)
+{
+    auto cs = this->getCurrentState();
+    auto fnc = std::bind(f, o, std::forward<Args>(args)...);
+
+    for(auto& s: states)
+    {
+        if(s.getStateBus() == bus)
+        {
+            this->setCurrentState(s);
+            fnc(args...);
+        }
     }
 
     this->setCurrentState(cs); // back to the state before loop
