@@ -1,17 +1,18 @@
 #include "PCA9685.h"
 
 
-void PCA9685::maintainChannel(uint16_t ch);
+const PCA9685& PCA9685::writeToChannel(uint16_t ch);
 {
 	currChannel = ch;
+	return *this;
 }
 
-void PCA9685::setChannelWidth(uint16_t w)
+void PCA9685::setWidth(uint16_t w)
 {
 	//I2CWRITE(currChannel, w);
 }
 
-void PCA9685::stop()
+void PCA9685::start()
 {
 	this->init();
 }
