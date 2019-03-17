@@ -1,3 +1,7 @@
+#include <stdint.h>
+#include <thread>
+#include <chrono>
+
 class PCA9685
 {
 public:
@@ -9,10 +13,10 @@ public:
 	~PCA9685()
 	{
 		for(int i=0; i<MAX_USABLE_CHANNELS; ++i)
-    	{
-    		pca.writeToChannel(i)->setWidth(0);
-    		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    	}
+	    	{
+	    		pca.writeToChannel(i)->setWidth(0);
+	    		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	    	}
 	}
 
 	const PCA9685& writeToChannel(uint16_t ch);
