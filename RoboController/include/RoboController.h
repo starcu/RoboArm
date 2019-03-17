@@ -40,22 +40,20 @@ public:
 
 private:
     Robo();
-
-    SimpleSocketServer server{8080, "127.0.0.1"};
+    RoboState   state;
 
     std::condition_variable initDoneCV;
     std::mutex  initMtx;
     std::unique_lock<std::mutex> initLock;
 
-    RoboState   state;
-
-    MPU         mpu;
-    //Servo       servo{SERVO_PIN}; // deprecated -> changed to PCA9685
-
     Multiplexer i2cMux;
-
-    std::thread serverThread;
     std::thread i2cMuxThread;
+
+    SimpleSocketServer server{8080, "127.0.0.1"};
+    std::thread serverThread;
+
+    MPU mpu;
+    //Servo       servo{SERVO_PIN}; // deprecated -> changed to PCA9685
 
     std::atomic_bool serverWorkerOK{true};
     std::atomic_bool i2cWorkerOK{true};

@@ -164,7 +164,7 @@ void Robo::i2cWorker()
     RoboLogger::logger()->severity_log(normal, FUNCTION_NAME, "Robot init done, I2C worker thread started");
     RoboLogger::logger()->severity_log(normal, FUNCTION_NAME, "Initializing all sensors");
 
-    i2cMux.performForEveryStateInBus(I2C_BUS::MPU6050, &MPU::initialize, mpu); // initialize all MPU6050 sensors
+    i2cMux.performForEveryStateInBusChannel(I2C_BUS::MPU6050, &MPU::initialize, mpu); // initialize all MPU6050 sensors
 
     while(i2cWorkerOK)
     {

@@ -114,12 +114,9 @@ public:
     void performForEveryState(F f, OBJ o, Args ...args);
 
     template <class F, class OBJ, class ...Args>
-    void performForEveryStateInBus(uint8_t bus, F f, OBJ o, Args ...args);
+    void performForEveryStateInBusChannel(uint8_t bus, F f, OBJ o, Args ...args);
 
-    const State getCurrentState() const
-    {
-        return currentState;
-    }
+    const State getCurrentState() const;
     
 private:
     uint8_t gpio0, gpio1, gpio2; // common in/out choice pins
@@ -143,7 +140,7 @@ void Multiplexer::performForEveryState(F f, OBJ o, Args ...args)
 }
 
 template <class F, class OBJ, class ...Args>
-void Multiplexer::performForEveryStateInBus(uint8_t bus, F f, OBJ o, Args ...args)
+void Multiplexer::performForEveryStateInBusChannel(uint8_t bus, F f, OBJ o, Args ...args)
 {
     auto cs = this->getCurrentState();
     auto fnc = std::bind(f, o, std::forward<Args>(args)...);
