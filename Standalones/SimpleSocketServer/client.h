@@ -15,9 +15,9 @@
 class SimpleSocketClient
 {
 private:
+    unsigned int port;
     std::string str_address;
     struct sockaddr_in serv_addr;
-    unsigned int port;
     int sock = 0, valread;
 
     const char* standard_request = "Hello from client!";

@@ -7,31 +7,35 @@
 
 using json = nlohmann::json;
 
-enum command
-{
-	command_1,
-	command_2,
-	command_3
-};
-
 class RoboCLI
 {
 private:
 	json json_response;
+
 public:
-	void build_json_tree(std::string key, std::string value);
-	void build_json_tree(std::string key, int value);
-	void build_json_tree(int key, std::string value);
-	void build_json_tree(int key, int value);
-	void build_json_tree(std::string key, double value);
-	void build_json_tree(double key, std::string value);
-	void build_json_tree(double key, double value);
-	void erase_from_tree(std::string key);
-	void erase_from_tree(int key);
-	void erase_from_tree(double key);
+	template<class KEY, class VALUE>
+	void build_json_tree(KEY key, VALUE value);
+	
+	template<class KEY>
+	void erase_from_tree(KEY key);
+	
 	void clear_tree();
 	std::string return_json_response_as_str() const { return json_response.dump(); }
 	void print_json_response_to_cout() const { std::cout << json_response.dump() << std::endl; }
 };
+
+template<class KEY, class VALUE>
+void RoboCLI::build_json_tree(KEY key, VALUE value)
+{
+	json_response[key] = value;
+}
+
+template<class KEY>
+void RoboCLI::erase_from_tree(KEY key)
+{
+	json_response.erase(key);
+}
+
+class RoboCLIException {};
 
 #endif

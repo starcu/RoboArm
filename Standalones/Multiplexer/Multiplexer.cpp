@@ -17,6 +17,11 @@ std::ostream& operator<< (std::ostream &out, const State &s) {
     return out << std::string(s);
 }
 
+const State Multiplexer::getCurrentState() const
+{
+    return currentState;
+}
+
 Multiplexer* Multiplexer::setCtrlPins(uint8_t _gpio0, uint8_t _gpio1, uint8_t _gpio2)
 {
     #ifdef VERBOSE

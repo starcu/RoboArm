@@ -1,8 +1,8 @@
 #include "RoboController.h"
 
 Robo::Robo(): initLock(initMtx),
-              serverThread(&Robo::serverWorker, this),
-              i2cMuxThread(&Robo::i2cWorker, this)
+              i2cMuxThread(&Robo::i2cWorker, this),
+	      serverThread(&Robo::serverWorker, this)
 {
     i2cMux
     .setCtrlPins(I2C_MUX_S0, I2C_MUX_S1,I2C_BUS::MPU6050)
@@ -164,7 +164,7 @@ void Robo::i2cWorker()
     RoboLogger::logger()->severity_log(normal, FUNCTION_NAME, "Robot init done, I2C worker thread started");
     RoboLogger::logger()->severity_log(normal, FUNCTION_NAME, "Initializing all sensors");
 
-    i2cMux.performForEveryStateInBus(I2C_BUS::MPU6050, &MPU::initialize, mpu); // initialize all MPU6050 sensors
+    i2cMux.performForEveryStateInBusChannel(I2C_BUS::MPU6050, &MPU::initialize, mpu); // initialize all MPU6050 sensors
 
     while(i2cWorkerOK)
     {
