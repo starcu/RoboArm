@@ -19,7 +19,7 @@ public:
 	    	}
 	}
 
-	const PCA9685& writeToChannel(uint16_t ch);
+	PCA9685* const writeToChannel(uint16_t ch);
 	void setWidth(uint16_t w);
 	void start();
 	void stop();

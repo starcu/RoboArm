@@ -1,8 +1,8 @@
 #include "RoboController.h"
 
 Robo::Robo(): initLock(initMtx),
-              serverThread(&Robo::serverWorker, this),
-              i2cMuxThread(&Robo::i2cWorker, this)
+              i2cMuxThread(&Robo::i2cWorker, this),
+	      serverThread(&Robo::serverWorker, this)
 {
     i2cMux
     .setCtrlPins(I2C_MUX_S0, I2C_MUX_S1,I2C_BUS::MPU6050)

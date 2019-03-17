@@ -8,6 +8,7 @@
 #include <math.h>
 #include <iostream>
 #include <chrono>
+#include <vector>
 
 const uint16_t chNum = 6;
 const std::vector<uint16_t> widths {1000, 1100, 1200, 1300, 1400, 1500};
@@ -20,7 +21,7 @@ int main(int argc, char **argv)
     {
     	for(uint16_t i=0; i<chNum; ++i)
     	{
-    		pca.writeToChannel(i)->setWidth(widths[i]);
+    		pca.writeToChannel(i)->setWidth(widths.at(i));
     	}
     	std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
