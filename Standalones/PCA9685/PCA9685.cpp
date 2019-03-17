@@ -1,7 +1,7 @@
 #include "PCA9685.h"
 
 
-const PCA9685& PCA9685::writeToChannel(uint16_t ch);
+const PCA9685& PCA9685::writeToChannel(uint16_t ch)
 {
 	currActiveChannel = ch;
 	return *this;

@@ -14,7 +14,7 @@ public:
 	{
 		for(int i=0; i<MAX_USABLE_CHANNELS; ++i)
 	    	{
-	    		pca.writeToChannel(i)->setWidth(0);
+	    		this->writeToChannel(i)->setWidth(0);
 	    		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	    	}
 	}
